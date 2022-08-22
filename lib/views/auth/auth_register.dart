@@ -23,7 +23,7 @@ class _AuthRegisterState extends State<AuthRegister> {
   void daftar() {
     FocusScope.of(context).requestFocus(FocusNode());
     authController.authCheckPhoneNumber({
-      'phonenumber': authController.phoneNumber.value.text,
+      'phone': authController.phoneNumber.value.text,
     });
   }
 

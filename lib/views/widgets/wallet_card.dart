@@ -49,7 +49,7 @@ class _WalletCardState extends State<WalletCard> {
               ),
               const Spacer(),
               Text(
-                'Rp ${currencyFormatter.format(double.parse(widget.walletModel!.walletMoney!))}',
+                'Rp ${currencyFormatter.format(widget.walletModel!.walletMoney!)}',
                 style: titleSemiBold.copyWith(color: Colors.white),
               ),
               const Spacer(),

@@ -7,6 +7,7 @@ import 'package:getx/themes/colors.dart';
 import 'package:getx/themes/fonts.dart';
 import 'package:getx/views/widgets/button_primary.dart';
 import 'package:getx/views/widgets/button_text.dart';
+import 'package:getx/views/widgets/icon_pad.dart';
 import 'package:getx/views/widgets/member_card.dart';
 import 'package:getx/views/widgets/shimmer_loading.dart';
 import 'package:getx/views/widgets/transaction_card.dart';
@@ -39,41 +40,9 @@ class _HomeState extends State<Home> {
 
   @override
   Widget build(BuildContext context) {
+    // Size s = MediaQuery.of(context).size;
     return Scaffold(
       backgroundColor: Colors.white,
-      appBar: AppBar(
-        backgroundColor: Colors.white,
-        automaticallyImplyLeading: false,
-        elevation: 0,
-        actions: [
-          InkWell(
-            onTap: () {
-              Get.defaultDialog(
-                title: "Keluar",
-                titleStyle: subtitleSemiBold,
-                middleText: "Yakin ingin keluar?",
-                middleTextStyle: contentRegular,
-                radius: 12,
-                cancel: ButtonPrimary(
-                  text: "Keluar",
-                  onTap: () => profileController.setLocalStorage(),
-                ),
-                confirm: ButtonPrimary(
-                  text: "Batal",
-                  textColor: primaryBlood,
-                  bgColor: primaryBloodLight,
-                  onTap: () => Get.back(),
-                ),
-              );
-            },
-            child: const Padding(
-              padding: EdgeInsets.all(16.0),
-              child: Icon(Icons.exit_to_app, color: primaryBlood),
-            ),
-          )
-        ],
-        title: Text("Our Wallet App", style: subtitleSemiBold),
-      ),
       body: RefreshIndicator(
         onRefresh: () async {
           homeController.getLocalData();
@@ -94,10 +63,65 @@ class _HomeState extends State<Home> {
                   return Column(
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
-                      Text(
-                        "Halo, ${homeController.dataLocal['username']} :)",
+                      ListTile(
+                        contentPadding: const EdgeInsets.all(0),
+                        leading: ClipRRect(
+                          borderRadius: BorderRadius.circular(8),
+                          child: Container(
+                            color: primaryBlood,
+                            width: 36,
+                            height: 36,
+                            child: homeController.dataLocal['photo'] != ""
+                                ? Image.network(
+                                    homeController.dataLocal['photo'],
+                                    fit: BoxFit.cover,
+                                  )
+                                : Center(
+                                    child: Text(
+                                      homeController.dataLocal['username'][0]
+                                          .toString()
+                                          .toUpperCase(),
+                                      style: smallSemiBold.copyWith(
+                                          color: Colors.white),
+                                    ),
+                                  ),
+                          ),
+                        ),
+                        title: Text(
+                          homeController.dataLocal['username'],
+                          style: contentRegular,
+                        ),
+                        subtitle: Text(
+                          homeController.dataLocal['email'],
+                          style: smallRegular,
+                        ),
+                        trailing: InkWell(
+                          onTap: () {
+                            Get.defaultDialog(
+                              title: "Keluar",
+                              titleStyle: subtitleSemiBold,
+                              middleText: "Yakin ingin keluar?",
+                              middleTextStyle: contentRegular,
+                              radius: 12,
+                              cancel: ButtonPrimary(
+                                text: "Keluar",
+                                onTap: () =>
+                                    profileController.setLocalStorage(),
+                              ),
+                              confirm: ButtonPrimary(
+                                text: "Batal",
+                                textColor: primaryBlood,
+                                bgColor: primaryBloodLight,
+                                onTap: () => Get.back(),
+                              ),
+                            );
+                          },
+                          child: const Icon(
+                            Icons.notifications_none_outlined,
+                            color: primaryBlood,
+                          ),
+                        ),
                       ),
-                      const SizedBox(height: 16),
                       homeController.list.isEmpty
                           ? WalletAddCard(
                               onTap: () {
@@ -120,6 +144,9 @@ class _HomeState extends State<Home> {
                                 onIndexChanged: (i) {
                                   homeController.onIndexChanged(i);
                                 },
+                                physics: homeController.list.length < 2
+                                    ? const NeverScrollableScrollPhysics()
+                                    : const ScrollPhysics(),
                                 itemCount: homeController.list.length,
                                 itemWidth: MediaQuery.of(context).size.width,
                                 itemHeight: 200.0,
@@ -128,86 +155,127 @@ class _HomeState extends State<Home> {
                                     : SwiperLayout.TINDER,
                               ),
                             ),
+                      const SizedBox(height: 16),
+                      homeController.list.isEmpty
+                          ? const SizedBox()
+                          : Row(
+                              mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                              children: [
+                                IconPad(
+                                  icon: Image.asset(
+                                    "assets/png/topup.png",
+                                  ),
+                                  text: "Top Up",
+                                ),
+                                IconPad(
+                                  icon: Image.asset(
+                                    "assets/png/payment.png",
+                                  ),
+                                  text: "Payment",
+                                ),
+                                IconPad(
+                                  icon: Image.asset(
+                                    "assets/png/barchart.png",
+                                  ),
+                                  text: "Statistic",
+                                ),
+                                IconPad(
+                                  icon: Image.asset(
+                                    "assets/png/invitation.png",
+                                  ),
+                                  text: "Invitation",
+                                ),
+                              ],
+                            ),
                     ],
                   );
                 }),
                 const SizedBox(height: 16),
-                Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    Row(
-                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                Expanded(
+                  child: SingleChildScrollView(
+                    child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
-                        Text("Members", style: smallSemiBold),
-                        ButtonText(
-                          text: "Selengkapnya",
-                          textColor: primaryBlood,
-                          onTap: () {},
+                        Row(
+                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                          children: [
+                            Text("Members", style: smallSemiBold),
+                            ButtonText(
+                              text: "Selengkapnya",
+                              textColor: primaryBlood,
+                              onTap: () {},
+                            ),
+                          ],
                         ),
+                        const SizedBox(height: 16),
+                        Obx(() {
+                          if (homeController.isLoadingMember.value) {
+                            return const ShimmerLoadingMember();
+                          }
+                          return Container(
+                            child: homeController.listmember.isEmpty
+                                ? Center(
+                                    child: Padding(
+                                    padding: const EdgeInsets.all(8.0),
+                                    child: Text("No Member Found",
+                                        style: contentRegular),
+                                  ))
+                                : SizedBox(
+                                    height: 96,
+                                    child: ListView(
+                                      scrollDirection: Axis.horizontal,
+                                      children: homeController.listmember
+                                          .map<Widget>((e) =>
+                                              MemberCard(memberWalletModel: e))
+                                          .toList(),
+                                    ),
+                                  ),
+                          );
+                        }),
+                        const SizedBox(height: 16),
+                        Column(
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: [
+                            Row(
+                              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                              children: [
+                                Text("Transaksi Terakhir",
+                                    style: smallSemiBold),
+                                ButtonText(
+                                  text: "Selengkapnya",
+                                  textColor: primaryBlood,
+                                  onTap: () {},
+                                ),
+                              ],
+                            ),
+                          ],
+                        ),
+                        const SizedBox(height: 16),
+                        Obx(() {
+                          if (homeController.isLoadingTransaction.value) {
+                            return const ShimmerLoadingTransaction();
+                          }
+                          return Container(
+                            child: homeController.listtransaction.isEmpty
+                                ? Center(
+                                    child: Padding(
+                                    padding: const EdgeInsets.all(8.0),
+                                    child: Text("No Transaction Found",
+                                        style: contentRegular),
+                                  ))
+                                : Column(
+                                    children: homeController.listtransaction
+                                        .map<Widget>((e) => TransactionCard(
+                                              transactionModel: e,
+                                            ))
+                                        .toList(),
+                                  ),
+                          );
+                        })
                       ],
                     ),
-                  ],
+                  ),
                 ),
-                const SizedBox(height: 16),
-                Obx(() {
-                  if (homeController.isLoadingMember.value) {
-                    return const ShimmerLoadingMember();
-                  }
-                  return Container(
-                    child: homeController.listmember.isEmpty
-                        ? Center(
-                            child: Padding(
-                            padding: const EdgeInsets.all(8.0),
-                            child:
-                                Text("No Member Found", style: contentRegular),
-                          ))
-                        : Row(
-                            children: homeController.listmember
-                                .map<Widget>(
-                                    (e) => MemberCard(memberWalletModel: e))
-                                .toList(),
-                          ),
-                  );
-                }),
-                const SizedBox(height: 16),
-                Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    Row(
-                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                      children: [
-                        Text("Transaksi Terakhir", style: smallSemiBold),
-                        ButtonText(
-                          text: "Selengkapnya",
-                          textColor: primaryBlood,
-                          onTap: () {},
-                        ),
-                      ],
-                    ),
-                  ],
-                ),
-                const SizedBox(height: 16),
-                Obx(() {
-                  if (homeController.isLoadingTransaction.value) {
-                    return const ShimmerLoadingTransaction();
-                  }
-                  return Container(
-                    child: homeController.listtransaction.isEmpty
-                        ? Center(
-                            child: Padding(
-                            padding: const EdgeInsets.all(8.0),
-                            child: Text("No Transaction Found",
-                                style: contentRegular),
-                          ))
-                        : Column(
-                            children: homeController.listtransaction
-                                .map<Widget>((e) => TransactionCard(
-                                      transactionModel: e,
-                                    ))
-                                .toList(),
-                          ),
-                  );
-                })
               ],
             ),
           ),

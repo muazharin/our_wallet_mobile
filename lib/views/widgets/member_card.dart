@@ -13,9 +13,14 @@ class MemberCard extends StatefulWidget {
 
 class _MemberCardState extends State<MemberCard> {
   @override
+  void initState() {
+    super.initState();
+  }
+
+  @override
   Widget build(BuildContext context) {
     return Padding(
-      padding: const EdgeInsets.only(right: 8.0),
+      padding: const EdgeInsets.only(left: 8),
       child: Container(
         decoration: BoxDecoration(
           borderRadius: BorderRadius.circular(8),
@@ -25,7 +30,7 @@ class _MemberCardState extends State<MemberCard> {
               color: Colors.grey.withOpacity(0.5),
               spreadRadius: 1,
               blurRadius: 16,
-              offset: const Offset(0, 3),
+              offset: const Offset(1, 1),
             ),
           ],
         ),
@@ -44,7 +49,9 @@ class _MemberCardState extends State<MemberCard> {
                             widget.memberWalletModel!.userName!
                                 .substring(0, 1)
                                 .toUpperCase(),
-                            style: contentRegular,
+                            style: contentSemiBold.copyWith(
+                              color: Colors.white,
+                            ),
                           ),
                         ),
                       ),

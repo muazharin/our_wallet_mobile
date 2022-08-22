@@ -46,6 +46,7 @@ class ShimmerLoadingMember extends StatelessWidget {
   const ShimmerLoadingMember({Key? key}) : super(key: key);
   @override
   Widget build(BuildContext context) {
+    // Size s = MediaQuery.of(context).size;
     return Container(
       decoration: BoxDecoration(
         borderRadius: BorderRadius.circular(8),

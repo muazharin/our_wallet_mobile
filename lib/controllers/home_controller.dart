@@ -29,14 +29,16 @@ class HomeController extends GetxController {
     index.value = 0;
     SharedPreferences sp = await SharedPreferences.getInstance();
     var data = {
-      "id": sp.getInt("id") ?? "",
+      "id": sp.getInt("user_id") ?? "",
       "username": sp.getString("username") ?? "",
       "email": sp.getString("email") ?? "",
       "phone": sp.getString("phone") ?? "",
       "photo": sp.getString("photo") ?? "",
       "gender": sp.getString("gender") ?? "",
-      "tgllahir": sp.getString("tgllahir") ?? "",
+      "tgllahir": sp.getString("tgl_lahir") ?? "",
       "address": sp.getString("address") ?? "",
+      "created_at": sp.getString("created_at") ?? "",
+      "updated_at": sp.getString("updated_at") ?? "",
     };
     dataLocal = RxMap.from(data);
     getOurWallet({'userId': dataLocal['id']});
@@ -51,7 +53,8 @@ class HomeController extends GetxController {
 
   void getOurWallet(Map params) async {
     GlobalServices()
-        .get('${getourwallet!}?userId=${params['userId']}')
+        .get('${getourwallet!}?page=$page',
+            header: await BaseHeader.getHeaderToken())
         .then((value) {
       isLoadingCard(false);
       if (value is String) {
@@ -62,7 +65,7 @@ class HomeController extends GetxController {
           resultWalletModel = ResultWalletModel.fromJson(response);
           list = resultWalletModel.data!;
           if (list.isNotEmpty) {
-            getMemberWallet({'id': list[index.value].owWalletId});
+            getMemberWallet({'wallet_id': list[index.value].walletId});
           } else {
             isLoadingMember(false);
             isLoadingTransaction(false);
@@ -76,7 +79,10 @@ class HomeController extends GetxController {
 
   void getMemberWallet(Map params) async {
     isLoadingMember(true);
-    GlobalServices().get('${getmemberwallet!}/${params["id"]}').then((value) {
+    GlobalServices()
+        .get('${getmemberwallet!}?wallet_id=${params["wallet_id"]}&page=$page',
+            header: await BaseHeader.getHeaderToken())
+        .then((value) {
       isLoadingMember(false);
       if (value is String) {
         AuthController().snackbar(value, false);
@@ -86,8 +92,7 @@ class HomeController extends GetxController {
           resultMemberWalletModel = ResultMemberWalletModel.fromJson(response);
           listmember = resultMemberWalletModel.data!;
           getLastTransaction({
-            'walletId': list[index.value].owWalletId,
-            'userId': '',
+            'walletId': list[index.value].walletId,
           });
         } else {
           AuthController().snackbar(response["message"], false);
@@ -100,7 +105,8 @@ class HomeController extends GetxController {
     isLoadingTransaction(true);
     GlobalServices()
         .get(
-            '${gettransactionwallet!}?walletId=${params["walletId"]}&userId=${params["userId"]}&page=$page')
+            '${gettransactionwallet!}?wallet_id=${params["walletId"]}&page=$page',
+            header: await BaseHeader.getHeaderToken())
         .then((value) {
       isLoadingTransaction(false);
       if (value is String) {

@@ -6,6 +6,7 @@ import 'package:get/get.dart';
 import 'package:getx/services/service_global.dart';
 import 'package:getx/themes/colors.dart';
 import 'package:getx/utils/constant.dart';
+import 'package:getx/utils/jwt_generator.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 class AuthController extends GetxController {
@@ -51,16 +52,20 @@ class AuthController extends GetxController {
     tglLahir.value.text = '${date.year}-${date.month}-${date.day}';
   }
 
-  void setLocalStorage(data) async {
+  void setLocalStorage(token) async {
     SharedPreferences sp = await SharedPreferences.getInstance();
-    sp.setInt("id", int.parse(data['id']));
-    sp.setString("username", data['username']);
-    sp.setString("email", data['email']);
-    sp.setString("phone", data['phone']);
-    sp.setString("photo", data['photo']);
-    sp.setString("gender", data['gender']);
-    sp.setString("tgllahir", data['tgllahir']);
-    sp.setString("address", data['address']);
+    var data = parseJwt(token['token']);
+    sp.setInt("id", int.parse(data['user_id']));
+    sp.setString("username", data['user_name']);
+    sp.setString("email", data['user_email']);
+    sp.setString("phone", data['user_phone']);
+    sp.setString("photo", data['user_photo']);
+    sp.setString("gender", data['user_gender']);
+    sp.setString("tgllahir", data['user_tgl_lahir']);
+    sp.setString("address", data['user_address']);
+    sp.setString("created_at", data['user_created_at']);
+    sp.setString("updated_at", data['user_updated_at']);
+    sp.setString("token", token['token']);
   }
 
   void checkLogin() async {
@@ -85,9 +90,9 @@ class AuthController extends GetxController {
         } else {
           final response = jsonDecode(value.body);
           if (response['status']) {
-            snackbar(response["message"], false);
-          } else {
             Get.toNamed("/auth_register_form");
+          } else {
+            snackbar(response["message"], false);
           }
         }
       });
