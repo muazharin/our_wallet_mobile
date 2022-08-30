@@ -34,7 +34,7 @@ class _AuthRegisterFormState extends State<AuthRegisterForm> {
       'email': authController.email.value.text,
       'phone': authController.phoneNumber.value.text,
       'gender': authController.gender.toString(),
-      'tgllahir': authController.tglLahir.value.text,
+      'tgl_lahir': authController.tglLahir.value.text,
       'address': authController.address.value.text,
     });
   }

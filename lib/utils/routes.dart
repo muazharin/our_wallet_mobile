@@ -6,6 +6,7 @@ import 'package:getx/views/auth/auth_register_form.dart';
 import 'package:getx/views/menu/main_menu.dart';
 import 'package:getx/views/splash_screen.dart';
 import 'package:getx/views/wallet/wallet_add.dart';
+import 'package:getx/views/wallet/wallet_detail.dart';
 
 List<GetPage<dynamic>>? getPages = [
   GetPage(
@@ -42,5 +43,9 @@ List<GetPage<dynamic>>? getPages = [
   GetPage(
     name: "/wallet_add",
     page: () => const WalletAdd(),
+  ),
+  GetPage(
+    name: "/wallet_detail",
+    page: () => const WalletDetail(),
   ),
 ];

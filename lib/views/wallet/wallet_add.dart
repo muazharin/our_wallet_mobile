@@ -1,3 +1,4 @@
+import 'package:card_swiper/card_swiper.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:get/get.dart';
@@ -9,7 +10,7 @@ import 'package:getx/views/widgets/button_loading.dart';
 import 'package:getx/views/widgets/button_primary.dart';
 import 'package:getx/views/widgets/button_text.dart';
 import 'package:getx/views/widgets/input_text_field.dart';
-import 'package:getx/views/widgets/radio_button.dart';
+import 'package:getx/views/widgets/wallet_card.dart';
 
 class WalletAdd extends StatefulWidget {
   const WalletAdd({Key? key}) : super(key: key);
@@ -22,8 +23,21 @@ class _WalletAddState extends State<WalletAdd> {
   final WalletController walletController = Get.put(WalletController());
   @override
   void initState() {
-    walletController.color.value = "red";
+    setInit();
     super.initState();
+  }
+
+  setInit() {
+    walletController.index.value = 0;
+  }
+
+  void createWallet() {
+    FocusScope.of(context).requestFocus(FocusNode());
+    walletController.handleAddWallet({
+      "name": walletController.walletName.value.text,
+      "money": walletController.walletMoney.value.text,
+      "color": walletController.color.value,
+    });
   }
 
   @override
@@ -69,122 +83,40 @@ class _WalletAddState extends State<WalletAdd> {
                               validator: validationString,
                               onChanged: (v) => setState(() {}),
                             ),
+                            const SizedBox(height: 16),
+                            InputTextField(
+                              hintText: "Masukkan Setoran Awal",
+                              controller: walletController.walletMoney.value,
+                              validator: validationNumber,
+                              onChanged: (v) => setState(() {}),
+                            ),
+                            const SizedBox(height: 16),
                           ],
                         ),
                       ),
-                      Row(
-                        children: [
-                          SizedBox(
-                            width: s.width / 2,
-                            child: RadioButton(
-                              groupValue: walletController.color.value,
-                              toggle: false,
-                              value: "red",
-                              text: "Merah",
-                              onChanged: (v) {
-                                FocusScope.of(context)
-                                    .requestFocus(FocusNode());
-                                walletController.setColor(v!);
-                              },
-                            ),
-                          ),
-                          SizedBox(
-                            width: s.width / 2,
-                            child: RadioButton(
-                              groupValue: walletController.color.value,
-                              toggle: false,
-                              value: "blue",
-                              text: "Biru",
-                              onChanged: (v) {
-                                FocusScope.of(context)
-                                    .requestFocus(FocusNode());
-                                walletController.setColor(v!);
-                              },
-                            ),
-                          ),
-                        ],
-                      ),
-                      Row(
-                        children: [
-                          SizedBox(
-                            width: s.width / 2,
-                            child: RadioButton(
-                              groupValue: walletController.color.value,
-                              toggle: false,
-                              value: "black",
-                              text: "Hitam",
-                              onChanged: (v) {
-                                FocusScope.of(context)
-                                    .requestFocus(FocusNode());
-                                walletController.setColor(v!);
-                              },
-                            ),
-                          ),
-                          SizedBox(
-                            width: s.width / 2,
-                            child: RadioButton(
-                              groupValue: walletController.color.value,
-                              toggle: false,
-                              value: "grey",
-                              text: "Abu-abu",
-                              onChanged: (v) {
-                                FocusScope.of(context)
-                                    .requestFocus(FocusNode());
-                                walletController.setColor(v!);
-                              },
-                            ),
-                          ),
-                        ],
-                      ),
-                      Row(
-                        children: [
-                          SizedBox(
-                            width: s.width / 2,
-                            child: RadioButton(
-                              groupValue: walletController.color.value,
-                              toggle: false,
-                              value: "yellow",
-                              text: "Kuning",
-                              onChanged: (v) {
-                                FocusScope.of(context)
-                                    .requestFocus(FocusNode());
-                                walletController.setColor(v!);
-                              },
-                            ),
-                          ),
-                          SizedBox(
-                            width: s.width / 2,
-                            child: RadioButton(
-                              groupValue: walletController.color.value,
-                              toggle: false,
-                              value: "green",
-                              text: "Hijau",
-                              onChanged: (v) {
-                                FocusScope.of(context)
-                                    .requestFocus(FocusNode());
-                                walletController.setColor(v!);
-                              },
-                            ),
-                          ),
-                        ],
-                      ),
-                      Row(
-                        children: [
-                          SizedBox(
-                            width: s.width / 2,
-                            child: RadioButton(
-                              groupValue: walletController.color.value,
-                              toggle: false,
-                              value: "purple",
-                              text: "Ungu",
-                              onChanged: (v) {
-                                FocusScope.of(context)
-                                    .requestFocus(FocusNode());
-                                walletController.setColor(v!);
-                              },
-                            ),
-                          ),
-                        ],
+                      SizedBox(
+                        height: 200,
+                        width: MediaQuery.of(context).size.width,
+                        child: Swiper(
+                          itemBuilder: (BuildContext context, int index) {
+                            return Center(
+                              child: WalletCard(
+                                isCreate: true,
+                                walletModel:
+                                    walletController.walletListCard[index],
+                              ),
+                            );
+                          },
+                          index: walletController.index.value,
+                          onIndexChanged: (i) {
+                            walletController.onIndexChanged(i);
+                          },
+                          physics: const ScrollPhysics(),
+                          itemCount: walletController.walletListCard.length,
+                          itemWidth: MediaQuery.of(context).size.width,
+                          itemHeight: 200.0,
+                          layout: SwiperLayout.STACK,
+                        ),
                       ),
                     ],
                   ),
@@ -210,7 +142,7 @@ class _WalletAddState extends State<WalletAdd> {
                                 if (walletController.isUpdate.value) {
                                   walletController.handleUpdateWallet();
                                 } else {
-                                  walletController.handleAddWallet();
+                                  createWallet();
                                 }
                               }
                             : null,

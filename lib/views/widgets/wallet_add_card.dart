@@ -2,8 +2,13 @@ import 'package:flutter/material.dart';
 import 'package:getx/themes/colors.dart';
 
 class WalletAddCard extends StatelessWidget {
-  const WalletAddCard({Key? key, this.onTap}) : super(key: key);
+  const WalletAddCard({
+    Key? key,
+    this.onTap,
+    this.message,
+  }) : super(key: key);
   final Function()? onTap;
+  final Widget? message;
   @override
   Widget build(BuildContext context) {
     return Padding(
@@ -17,12 +22,13 @@ class WalletAddCard extends StatelessWidget {
             borderRadius: BorderRadius.circular(16),
             color: grayscaleStone,
           ),
-          child: const Center(
-            child: Icon(
-              Icons.add,
-              color: grayscaleStoneLight,
-              size: 48,
-            ),
+          child: Center(
+            child: message ??
+                const Icon(
+                  Icons.add,
+                  color: grayscaleStoneLight,
+                  size: 48,
+                ),
           ),
         ),
       ),

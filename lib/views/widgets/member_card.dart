@@ -20,54 +20,37 @@ class _MemberCardState extends State<MemberCard> {
   @override
   Widget build(BuildContext context) {
     return Padding(
-      padding: const EdgeInsets.only(left: 8),
-      child: Container(
-        decoration: BoxDecoration(
-          borderRadius: BorderRadius.circular(8),
-          color: Colors.white,
-          boxShadow: [
-            BoxShadow(
-              color: Colors.grey.withOpacity(0.5),
-              spreadRadius: 1,
-              blurRadius: 16,
-              offset: const Offset(1, 1),
-            ),
-          ],
-        ),
-        child: Padding(
-          padding: const EdgeInsets.all(16),
-          child: Column(
-            children: [
-              widget.memberWalletModel!.userPhoto == ''
-                  ? ClipOval(
-                      child: Container(
-                        height: 56,
-                        width: 56,
-                        color: primaryBlood,
-                        child: Center(
-                          child: Text(
-                            widget.memberWalletModel!.userName!
-                                .substring(0, 1)
-                                .toUpperCase(),
-                            style: contentSemiBold.copyWith(
-                              color: Colors.white,
-                            ),
-                          ),
+      padding: const EdgeInsets.symmetric(horizontal: 8),
+      child: Column(
+        children: [
+          widget.memberWalletModel!.userPhoto == ''
+              ? ClipOval(
+                  child: Container(
+                    height: 48,
+                    width: 48,
+                    color: primaryBlood,
+                    child: Center(
+                      child: Text(
+                        widget.memberWalletModel!.userName!
+                            .substring(0, 1)
+                            .toUpperCase(),
+                        style: contentSemiBold.copyWith(
+                          color: Colors.white,
                         ),
                       ),
-                    )
-                  : ClipOval(
-                      child: Image.network(
-                        widget.memberWalletModel!.userPhoto!,
-                        height: 56,
-                        width: 56,
-                        fit: BoxFit.contain,
-                      ),
                     ),
-              const SizedBox(height: 8),
-            ],
-          ),
-        ),
+                  ),
+                )
+              : ClipOval(
+                  child: Image.network(
+                    widget.memberWalletModel!.userPhoto!,
+                    height: 48,
+                    width: 48,
+                    fit: BoxFit.cover,
+                  ),
+                ),
+          const SizedBox(height: 8),
+        ],
       ),
     );
   }

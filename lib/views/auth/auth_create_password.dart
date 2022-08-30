@@ -31,7 +31,7 @@ class _AuthCreatePasswordState extends State<AuthCreatePassword> {
     FocusScope.of(context).requestFocus(FocusNode());
     authController.authCreatePassword(
       {'password': authController.password.value.text},
-      Get.arguments['data']['phone'],
+      Get.arguments['data'],
       isRecreate,
     );
   }

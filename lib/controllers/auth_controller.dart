@@ -49,13 +49,20 @@ class AuthController extends GetxController {
   }
 
   void setDate(DateTime date) {
-    tglLahir.value.text = '${date.year}-${date.month}-${date.day}';
+    String day = "${date.day}";
+    String month = "${date.month}";
+    if (date.month < 10) {
+      month = "0${date.month}";
+    }
+    if (date.day < 10) {
+      day = "0${date.day}";
+    }
+    tglLahir.value.text = '${date.year}-$month-$day';
   }
 
-  void setLocalStorage(token) async {
+  void setLocalStorage(token, {bool isStatus = false}) async {
     SharedPreferences sp = await SharedPreferences.getInstance();
     var data = parseJwt(token['token']);
-    sp.setInt("id", int.parse(data['user_id']));
     sp.setString("username", data['user_name']);
     sp.setString("email", data['user_email']);
     sp.setString("phone", data['user_phone']);
@@ -65,14 +72,16 @@ class AuthController extends GetxController {
     sp.setString("address", data['user_address']);
     sp.setString("created_at", data['user_created_at']);
     sp.setString("updated_at", data['user_updated_at']);
+    sp.setString("user_status", isStatus ? "complete" : token['user_status']);
     sp.setString("token", token['token']);
   }
 
   void checkLogin() async {
     Timer(const Duration(seconds: 3), () async {
       SharedPreferences sp = await SharedPreferences.getInstance();
-      if (sp.getInt('id') != null) {
-        Get.offNamed("/main_menu");
+      if (sp.getString('token') != null &&
+          sp.getString("user_status") == "complete") {
+        Get.offNamed("/main_menu", arguments: {"isNew": false});
       } else {
         Get.offNamed("/auth_login");
       }
@@ -92,7 +101,17 @@ class AuthController extends GetxController {
           if (response['status']) {
             Get.toNamed("/auth_register_form");
           } else {
-            snackbar(response["message"], false);
+            if (response['data']['user_status'] == "incomplete") {
+              Get.toNamed(
+                "/auth_create_password",
+                arguments: {
+                  'isRecreate': false,
+                  'data': response['data'],
+                },
+              );
+            } else {
+              snackbar(response["message"], false);
+            }
           }
         }
       });
@@ -111,7 +130,7 @@ class AuthController extends GetxController {
           final response = jsonDecode(value.body);
           if (response['status']) {
             setLocalStorage(response['data']);
-            Get.offNamed("/main_menu");
+            Get.offNamed("/main_menu", arguments: {"isNew": false});
           } else {
             snackbar(response["message"], false);
           }
@@ -146,12 +165,16 @@ class AuthController extends GetxController {
     }
   }
 
-  void authCreatePassword(Map data, String? phone, bool isRecreate) async {
+  void authCreatePassword(Map data, token, bool isRecreate) async {
     if (cpassKey.value.currentState!.validate()) {
       cpassKey.value.currentState!.save();
       isLoading(true);
       GlobalServices()
-          .post("${authcreatepassword!}?phone=${phone!}", data)
+          .put(
+        authcreatepassword!,
+        data,
+        header: await BaseHeader.getHeaderToken(data: token['token']),
+      )
           .then((value) {
         isLoading(false);
         if (value is String) {
@@ -162,7 +185,8 @@ class AuthController extends GetxController {
             if (isRecreate) {
               Get.offAllNamed("/auth_login");
             } else {
-              Get.offAllNamed("/main_menu");
+              setLocalStorage(token, isStatus: true);
+              Get.offAllNamed("/main_menu", arguments: {"isNew": true});
             }
           } else {
             snackbar(response["message"], false);

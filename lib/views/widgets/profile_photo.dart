@@ -37,7 +37,7 @@ class ProfilePhoto extends StatelessWidget {
                 photo!,
                 width: size ?? 56,
                 height: size ?? 56,
-                fit: BoxFit.contain,
+                fit: BoxFit.cover,
               ),
             ),
     );

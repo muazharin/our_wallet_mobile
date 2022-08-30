@@ -16,6 +16,12 @@ class HomeController extends GetxController {
   List<TransactionModel> listtransaction = [];
   var page = 1.obs;
   var index = 0.obs;
+  var errorList = "".obs;
+  var errorListMember = "".obs;
+  var errorListTransaction = "".obs;
+  var isErrorList = false.obs;
+  var isErrorListMember = false.obs;
+  var isErrorListTransaction = false.obs;
   var dataLocal = {}.obs;
   var isLoading = false.obs;
   var isLoadingCard = false.obs;
@@ -29,7 +35,6 @@ class HomeController extends GetxController {
     index.value = 0;
     SharedPreferences sp = await SharedPreferences.getInstance();
     var data = {
-      "id": sp.getInt("user_id") ?? "",
       "username": sp.getString("username") ?? "",
       "email": sp.getString("email") ?? "",
       "phone": sp.getString("phone") ?? "",
@@ -41,24 +46,27 @@ class HomeController extends GetxController {
       "updated_at": sp.getString("updated_at") ?? "",
     };
     dataLocal = RxMap.from(data);
-    getOurWallet({'userId': dataLocal['id']});
+    getOurWallet();
   }
 
   void onIndexChanged(int i) {
     index.value = i;
     isLoadingMember(true);
     isLoadingTransaction(true);
-    getOurWallet({'userId': dataLocal['id']});
+    getOurWallet();
   }
 
-  void getOurWallet(Map params) async {
+  void getOurWallet() async {
     GlobalServices()
         .get('${getourwallet!}?page=$page',
             header: await BaseHeader.getHeaderToken())
         .then((value) {
       isLoadingCard(false);
       if (value is String) {
-        AuthController().snackbar(value, false);
+        isErrorList(true);
+        errorList.value = value;
+        isLoadingMember(false);
+        isLoadingTransaction(false);
       } else {
         final response = jsonDecode(value.body);
         if (response['status']) {
@@ -71,7 +79,10 @@ class HomeController extends GetxController {
             isLoadingTransaction(false);
           }
         } else {
-          AuthController().snackbar(response["message"], false);
+          isLoadingMember(false);
+          isLoadingTransaction(false);
+          isErrorList(true);
+          errorList.value = response["message"];
         }
       }
     });

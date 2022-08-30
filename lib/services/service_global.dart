@@ -20,6 +20,21 @@ class GlobalServices {
     }
   }
 
+  Future put(path, body, {Map<String, String>? header}) async {
+    Uri url = Uri.parse("$path");
+    try {
+      return await http
+          .put(url, body: body, headers: header ?? headers)
+          .timeout(const Duration(seconds: 10));
+    } on TimeoutException catch (_) {
+      return 'Request Timeout';
+    } on SocketException catch (_) {
+      return 'No Connection Internet';
+    } catch (e) {
+      return 'Error: ' + e.toString();
+    }
+  }
+
   Future get(path, {Map<String, String>? header}) async {
     Uri url = Uri.parse("$path");
     try {

@@ -1,11 +1,15 @@
 import 'package:flutter/material.dart';
+import 'package:get/get.dart';
 import 'package:getx/models/wallet_model.dart';
 import 'package:getx/themes/fonts.dart';
 import 'package:intl/intl.dart';
 
 class WalletCard extends StatefulWidget {
-  const WalletCard({Key? key, required this.walletModel}) : super(key: key);
+  const WalletCard(
+      {Key? key, required this.walletModel, required this.isCreate})
+      : super(key: key);
   final WalletModel? walletModel;
+  final bool? isCreate;
   @override
   _WalletCardState createState() => _WalletCardState();
 }
@@ -48,41 +52,44 @@ class _WalletCardState extends State<WalletCard> {
                 ],
               ),
               const Spacer(),
-              Text(
-                'Rp ${currencyFormatter.format(widget.walletModel!.walletMoney!)}',
-                style: titleSemiBold.copyWith(color: Colors.white),
-              ),
-              const Spacer(),
-              Row(
-                children: [
-                  const Spacer(),
-                  InkWell(
-                    onTap: () {
-                      // Navigator.of(context).push(MaterialPageRoute(
-                      //   builder: (context) => DetailWallet(
-                      //     walletModel: widget.walletModel,
-                      //   ),
-                      // ));
-                    },
-                    child: Container(
-                      decoration: BoxDecoration(
-                        borderRadius: BorderRadius.circular(8),
-                        color: Colors.white.withOpacity(0.5),
-                      ),
-                      child: Padding(
-                        padding: const EdgeInsets.symmetric(
-                          vertical: 8.0,
-                          horizontal: 16,
-                        ),
-                        child: Text(
-                          "Detail",
-                          style: contentRegular,
-                        ),
-                      ),
+              widget.isCreate!
+                  ? const SizedBox()
+                  : Text(
+                      'Rp ${currencyFormatter.format(widget.walletModel!.walletMoney!)}',
+                      style: titleSemiBold.copyWith(color: Colors.white),
                     ),
-                  )
-                ],
-              )
+              const Spacer(),
+              widget.isCreate!
+                  ? const SizedBox()
+                  : Row(
+                      children: [
+                        const Spacer(),
+                        InkWell(
+                          onTap: () {
+                            Get.toNamed(
+                              "/wallet_detail",
+                              arguments: {"wallet": widget.walletModel},
+                            );
+                          },
+                          child: Container(
+                            decoration: BoxDecoration(
+                              borderRadius: BorderRadius.circular(8),
+                              color: Colors.white.withOpacity(0.5),
+                            ),
+                            child: Padding(
+                              padding: const EdgeInsets.symmetric(
+                                vertical: 8.0,
+                                horizontal: 16,
+                              ),
+                              child: Text(
+                                "Detail",
+                                style: contentRegular,
+                              ),
+                            ),
+                          ),
+                        )
+                      ],
+                    )
             ],
           ),
         )

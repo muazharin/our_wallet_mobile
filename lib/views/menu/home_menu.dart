@@ -9,6 +9,7 @@ import 'package:getx/views/widgets/button_primary.dart';
 import 'package:getx/views/widgets/button_text.dart';
 import 'package:getx/views/widgets/icon_pad.dart';
 import 'package:getx/views/widgets/member_card.dart';
+import 'package:getx/views/widgets/message_error.dart';
 import 'package:getx/views/widgets/shimmer_loading.dart';
 import 'package:getx/views/widgets/transaction_card.dart';
 import 'package:getx/views/widgets/wallet_add_card.dart';
@@ -25,6 +26,7 @@ class _HomeState extends State<Home> {
   final ProfileController profileController = Get.put(ProfileController());
   final HomeController homeController = Get.put(HomeController());
   String title = "Home";
+  bool isNew = false;
 
   @override
   void initState() {
@@ -33,6 +35,34 @@ class _HomeState extends State<Home> {
   }
 
   getInit() {
+    setState(() {
+      isNew = Get.arguments['isNew'];
+    });
+    if (isNew) {
+      Future.delayed(const Duration(seconds: 3), () {
+        Get.defaultDialog(
+          title: "Info Pengguna Baru",
+          titleStyle: subtitleSemiBold,
+          middleText: "Buat walletmu sekarang?",
+          middleTextStyle: contentRegular,
+          radius: 12,
+          cancel: ButtonPrimary(
+              text: "Ya",
+              textColor: Colors.white,
+              bgColor: primaryWater,
+              onTap: () {
+                Get.back();
+                Get.toNamed("/wallet_add");
+              }),
+          confirm: ButtonPrimary(
+            text: "Nanti aja",
+            textColor: primaryWater,
+            bgColor: primaryWaterLight,
+            onTap: () => Get.back(),
+          ),
+        );
+      });
+    }
     if (homeController.dataLocal.isEmpty) {
       homeController.getLocalData();
     }
@@ -122,40 +152,80 @@ class _HomeState extends State<Home> {
                           ),
                         ),
                       ),
-                      homeController.list.isEmpty
+                      homeController.isErrorList.isTrue
                           ? WalletAddCard(
-                              onTap: () {
-                                Get.toNamed("/wallet_add")?.then((_) {
-                                  homeController.getLocalData();
-                                });
-                              },
-                            )
-                          : SizedBox(
-                              height: 200,
-                              width: MediaQuery.of(context).size.width,
-                              child: Swiper(
-                                itemBuilder: (BuildContext context, int index) {
-                                  return Center(
-                                    child: WalletCard(
-                                      walletModel: homeController.list[index],
-                                    ),
-                                  );
-                                },
-                                onIndexChanged: (i) {
-                                  homeController.onIndexChanged(i);
-                                },
-                                physics: homeController.list.length < 2
-                                    ? const NeverScrollableScrollPhysics()
-                                    : const ScrollPhysics(),
-                                itemCount: homeController.list.length,
-                                itemWidth: MediaQuery.of(context).size.width,
-                                itemHeight: 200.0,
-                                layout: homeController.list.length < 3
-                                    ? SwiperLayout.DEFAULT
-                                    : SwiperLayout.TINDER,
+                              onTap: () {},
+                              message: MessageError(
+                                message: homeController.errorList.value,
+                                onTap: () => homeController.getLocalData(),
                               ),
+                            )
+                          : homeController.list.isEmpty
+                              ? WalletAddCard(
+                                  onTap: () {
+                                    Get.toNamed("/wallet_add")?.then((_) {
+                                      homeController.getLocalData();
+                                    });
+                                  },
+                                )
+                              : SizedBox(
+                                  height: 200,
+                                  width: MediaQuery.of(context).size.width,
+                                  child: Swiper(
+                                    itemBuilder:
+                                        (BuildContext context, int index) {
+                                      return Center(
+                                        child: WalletCard(
+                                          isCreate: false,
+                                          walletModel:
+                                              homeController.list[index],
+                                        ),
+                                      );
+                                    },
+                                    onIndexChanged: (i) {
+                                      homeController.onIndexChanged(i);
+                                    },
+                                    physics: homeController.list.length < 2
+                                        ? const NeverScrollableScrollPhysics()
+                                        : const ScrollPhysics(),
+                                    itemCount: homeController.list.length,
+                                    itemWidth:
+                                        MediaQuery.of(context).size.width,
+                                    itemHeight: 200.0,
+                                    layout: SwiperLayout.DEFAULT,
+                                  ),
+                                ),
+                      const SizedBox(height: 8),
+                      homeController.list.length < 2
+                          ? const SizedBox()
+                          : Row(
+                              mainAxisAlignment: MainAxisAlignment.center,
+                              children: homeController.list
+                                  .asMap()
+                                  .entries
+                                  .map<Widget>((e) {
+                                return InkWell(
+                                  child: Container(
+                                    width: homeController.index.value == e.key
+                                        ? 24.0
+                                        : 8.0,
+                                    height: 8.0,
+                                    margin: const EdgeInsets.symmetric(
+                                      vertical: 8.0,
+                                      horizontal: 2.0,
+                                    ),
+                                    decoration: BoxDecoration(
+                                      borderRadius: BorderRadius.circular(8.0),
+                                      shape: BoxShape.rectangle,
+                                      color: homeController.index.value == e.key
+                                          ? primaryBlood
+                                          : grayscaleStone,
+                                    ),
+                                  ),
+                                );
+                              }).toList(),
                             ),
-                      const SizedBox(height: 16),
+                      const SizedBox(height: 8),
                       homeController.list.isEmpty
                           ? const SizedBox()
                           : Row(
@@ -200,11 +270,11 @@ class _HomeState extends State<Home> {
                           mainAxisAlignment: MainAxisAlignment.spaceBetween,
                           children: [
                             Text("Members", style: smallSemiBold),
-                            ButtonText(
-                              text: "Selengkapnya",
-                              textColor: primaryBlood,
-                              onTap: () {},
-                            ),
+                            // ButtonText(
+                            //   text: "Selengkapnya",
+                            //   textColor: primaryBlood,
+                            //   onTap: () {},
+                            // ),
                           ],
                         ),
                         const SizedBox(height: 16),
@@ -221,18 +291,48 @@ class _HomeState extends State<Home> {
                                         style: contentRegular),
                                   ))
                                 : SizedBox(
-                                    height: 96,
-                                    child: ListView(
+                                    height: 64,
+                                    child: SingleChildScrollView(
                                       scrollDirection: Axis.horizontal,
-                                      children: homeController.listmember
-                                          .map<Widget>((e) =>
-                                              MemberCard(memberWalletModel: e))
-                                          .toList(),
+                                      child: Row(
+                                        crossAxisAlignment:
+                                            CrossAxisAlignment.start,
+                                        children: [
+                                          Row(
+                                            children: homeController.listmember
+                                                .map<Widget>((e) => MemberCard(
+                                                    memberWalletModel: e))
+                                                .toList(),
+                                          ),
+                                          const SizedBox(width: 8),
+                                          Container(
+                                            width: 48,
+                                            height: 48,
+                                            decoration: BoxDecoration(
+                                              color: Colors.white,
+                                              borderRadius:
+                                                  BorderRadius.circular(48),
+                                              boxShadow: [
+                                                BoxShadow(
+                                                  color: Colors.grey
+                                                      .withOpacity(0.5),
+                                                  spreadRadius: 1,
+                                                  blurRadius: 16,
+                                                  offset: const Offset(1, 1),
+                                                ),
+                                              ],
+                                            ),
+                                            child: const Icon(
+                                              Icons.arrow_forward_ios,
+                                              color: primaryBlood,
+                                            ),
+                                          )
+                                        ],
+                                      ),
                                     ),
                                   ),
                           );
                         }),
-                        const SizedBox(height: 16),
                         Column(
                           crossAxisAlignment: CrossAxisAlignment.start,
                           children: [
