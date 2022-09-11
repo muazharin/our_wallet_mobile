@@ -5,7 +5,7 @@ import 'package:getx/controllers/home_controller.dart';
 import 'package:getx/controllers/profile_controller.dart';
 import 'package:getx/themes/colors.dart';
 import 'package:getx/themes/fonts.dart';
-import 'package:getx/views/widgets/button_primary.dart';
+import 'package:getx/utils/custom_dialog.dart';
 import 'package:getx/views/widgets/button_text.dart';
 import 'package:getx/views/widgets/icon_pad.dart';
 import 'package:getx/views/widgets/member_card.dart';
@@ -27,6 +27,7 @@ class _HomeState extends State<Home> {
   final HomeController homeController = Get.put(HomeController());
   String title = "Home";
   bool isNew = false;
+  bool isReload = false;
 
   @override
   void initState() {
@@ -37,30 +38,30 @@ class _HomeState extends State<Home> {
   getInit() {
     setState(() {
       isNew = Get.arguments['isNew'];
+      isReload = Get.arguments['isReload'];
     });
     if (isNew) {
       Future.delayed(const Duration(seconds: 3), () {
-        Get.defaultDialog(
+        CustomDialog().yesOrNoDialog(
           title: "Info Pengguna Baru",
-          titleStyle: subtitleSemiBold,
-          middleText: "Buat walletmu sekarang?",
-          middleTextStyle: contentRegular,
-          radius: 12,
-          cancel: ButtonPrimary(
-              text: "Ya",
-              textColor: Colors.white,
-              bgColor: primaryWater,
-              onTap: () {
-                Get.back();
-                Get.toNamed("/wallet_add");
-              }),
-          confirm: ButtonPrimary(
-            text: "Nanti aja",
-            textColor: primaryWater,
-            bgColor: primaryWaterLight,
-            onTap: () => Get.back(),
-          ),
+          onTapYes: () {
+            Get.back();
+            Get.toNamed("/wallet_add");
+          },
+          onTapNo: () => Get.back(),
+          question: "Buat walletmu sekarang?",
+          yes: "Ok",
+          no: "Nanti aja",
+          type: "info",
         );
+      });
+    }
+    if (isReload) {
+      WidgetsBinding.instance!.addPostFrameCallback((_) {
+        homeController.getLocalData();
+        setState(() {
+          Get.arguments['isReload'] = false;
+        });
       });
     }
     if (homeController.dataLocal.isEmpty) {
@@ -127,23 +128,12 @@ class _HomeState extends State<Home> {
                         ),
                         trailing: InkWell(
                           onTap: () {
-                            Get.defaultDialog(
-                              title: "Keluar",
-                              titleStyle: subtitleSemiBold,
-                              middleText: "Yakin ingin keluar?",
-                              middleTextStyle: contentRegular,
-                              radius: 12,
-                              cancel: ButtonPrimary(
-                                text: "Keluar",
-                                onTap: () =>
-                                    profileController.setLocalStorage(),
-                              ),
-                              confirm: ButtonPrimary(
-                                text: "Batal",
-                                textColor: primaryBlood,
-                                bgColor: primaryBloodLight,
-                                onTap: () => Get.back(),
-                              ),
+                            CustomDialog().yesOrNoDialog(
+                              onTapYes: () =>
+                                  profileController.setLocalStorage(),
+                              onTapNo: () => Get.back(),
+                              question: "Yakin ingin keluar?",
+                              type: "warning",
                             );
                           },
                           child: const Icon(
@@ -156,14 +146,17 @@ class _HomeState extends State<Home> {
                           ? WalletAddCard(
                               onTap: () {},
                               message: MessageError(
-                                message: homeController.errorList.value,
-                                onTap: () => homeController.getLocalData(),
-                              ),
+                                  message: homeController.errorList.value,
+                                  onTap: () {
+                                    homeController.isErrorList.value = false;
+                                    homeController.getLocalData();
+                                  }),
                             )
                           : homeController.list.isEmpty
                               ? WalletAddCard(
                                   onTap: () {
                                     Get.toNamed("/wallet_add")?.then((_) {
+                                      homeController.isErrorList.value = false;
                                       homeController.getLocalData();
                                     });
                                   },
@@ -183,6 +176,7 @@ class _HomeState extends State<Home> {
                                       );
                                     },
                                     onIndexChanged: (i) {
+                                      homeController.isErrorList.value = false;
                                       homeController.onIndexChanged(i);
                                     },
                                     physics: homeController.list.length < 2
@@ -234,26 +228,57 @@ class _HomeState extends State<Home> {
                                 IconPad(
                                   icon: Image.asset(
                                     "assets/png/topup.png",
+                                    color: primaryBlood,
                                   ),
                                   text: "Top Up",
+                                  onTap: () => Get.toNamed(
+                                    "/trans_topup",
+                                    arguments: {
+                                      "wallet_id": homeController
+                                          .list[homeController.index.value]
+                                          .walletId
+                                    },
+                                  ),
                                 ),
                                 IconPad(
                                   icon: Image.asset(
                                     "assets/png/payment.png",
+                                    color: primaryBlood,
                                   ),
                                   text: "Payment",
+                                  onTap: () => Get.toNamed(
+                                    "/trans_shop",
+                                    arguments: {
+                                      "wallet_id": homeController
+                                          .list[homeController.index.value]
+                                          .walletId
+                                    },
+                                  ),
                                 ),
                                 IconPad(
                                   icon: Image.asset(
                                     "assets/png/barchart.png",
+                                    color: primaryBlood,
                                   ),
                                   text: "Statistic",
+                                  // onTap: () {},
                                 ),
                                 IconPad(
                                   icon: Image.asset(
                                     "assets/png/invitation.png",
+                                    color: primaryBlood,
                                   ),
                                   text: "Invitation",
+                                  onTap: () {
+                                    Get.toNamed(
+                                      "/wallet_member_add",
+                                      arguments: {
+                                        "wallet_id": homeController
+                                            .list[homeController.index.value]
+                                            .walletId,
+                                      },
+                                    );
+                                  },
                                 ),
                               ],
                             ),
@@ -270,11 +295,6 @@ class _HomeState extends State<Home> {
                           mainAxisAlignment: MainAxisAlignment.spaceBetween,
                           children: [
                             Text("Members", style: smallSemiBold),
-                            // ButtonText(
-                            //   text: "Selengkapnya",
-                            //   textColor: primaryBlood,
-                            //   onTap: () {},
-                            // ),
                           ],
                         ),
                         const SizedBox(height: 16),
@@ -283,56 +303,76 @@ class _HomeState extends State<Home> {
                             return const ShimmerLoadingMember();
                           }
                           return Container(
-                            child: homeController.listmember.isEmpty
-                                ? Center(
-                                    child: Padding(
-                                    padding: const EdgeInsets.all(8.0),
-                                    child: Text("No Member Found",
-                                        style: contentRegular),
-                                  ))
-                                : SizedBox(
-                                    height: 64,
-                                    child: SingleChildScrollView(
-                                      scrollDirection: Axis.horizontal,
-                                      child: Row(
-                                        crossAxisAlignment:
-                                            CrossAxisAlignment.start,
-                                        children: [
-                                          Row(
-                                            children: homeController.listmember
-                                                .map<Widget>((e) => MemberCard(
-                                                    memberWalletModel: e))
-                                                .toList(),
-                                          ),
-                                          const SizedBox(width: 8),
-                                          Container(
-                                            width: 48,
-                                            height: 48,
-                                            decoration: BoxDecoration(
-                                              color: Colors.white,
-                                              borderRadius:
-                                                  BorderRadius.circular(48),
-                                              boxShadow: [
-                                                BoxShadow(
-                                                  color: Colors.grey
-                                                      .withOpacity(0.5),
-                                                  spreadRadius: 1,
-                                                  blurRadius: 16,
-                                                  offset: const Offset(1, 1),
+                            child: homeController.isErrorListMember.isTrue
+                                ? MessageError(
+                                    message:
+                                        homeController.errorListMember.value,
+                                    onTap: () {
+                                      homeController.isErrorListMember(false);
+                                      homeController.getMemberWallet({
+                                        'wallet_id': homeController
+                                            .list[homeController.index.value]
+                                            .walletId
+                                      });
+                                    },
+                                  )
+                                : homeController.listmember.isEmpty
+                                    ? Center(
+                                        child: Padding(
+                                        padding: const EdgeInsets.all(8.0),
+                                        child: Text("No Member Found",
+                                            style: contentRegular),
+                                      ))
+                                    : SizedBox(
+                                        height: 64,
+                                        child: SingleChildScrollView(
+                                          scrollDirection: Axis.horizontal,
+                                          child: Row(
+                                            crossAxisAlignment:
+                                                CrossAxisAlignment.start,
+                                            children: [
+                                              Row(
+                                                children: homeController
+                                                    .listmember
+                                                    .map<Widget>(
+                                                      (e) => MemberCard(
+                                                        userPhoto: e.userPhoto,
+                                                        userName: e.userName,
+                                                      ),
+                                                    )
+                                                    .toList(),
+                                              ),
+                                              const SizedBox(width: 8),
+                                              Container(
+                                                width: 48,
+                                                height: 48,
+                                                decoration: BoxDecoration(
+                                                  color: Colors.white,
+                                                  borderRadius:
+                                                      BorderRadius.circular(48),
+                                                  boxShadow: [
+                                                    BoxShadow(
+                                                      color: Colors.grey
+                                                          .withOpacity(0.5),
+                                                      spreadRadius: 1,
+                                                      blurRadius: 16,
+                                                      offset:
+                                                          const Offset(1, 1),
+                                                    ),
+                                                  ],
                                                 ),
-                                              ],
-                                            ),
-                                            child: const Icon(
-                                              Icons.arrow_forward_ios,
-                                              color: primaryBlood,
-                                            ),
-                                          )
-                                        ],
+                                                child: const Icon(
+                                                  Icons.arrow_forward_ios,
+                                                  color: primaryBlood,
+                                                ),
+                                              )
+                                            ],
+                                          ),
+                                        ),
                                       ),
-                                    ),
-                                  ),
                           );
                         }),
+                        const SizedBox(height: 16),
                         Column(
                           crossAxisAlignment: CrossAxisAlignment.start,
                           children: [
@@ -356,20 +396,34 @@ class _HomeState extends State<Home> {
                             return const ShimmerLoadingTransaction();
                           }
                           return Container(
-                            child: homeController.listtransaction.isEmpty
-                                ? Center(
-                                    child: Padding(
-                                    padding: const EdgeInsets.all(8.0),
-                                    child: Text("No Transaction Found",
-                                        style: contentRegular),
-                                  ))
-                                : Column(
-                                    children: homeController.listtransaction
-                                        .map<Widget>((e) => TransactionCard(
-                                              transactionModel: e,
-                                            ))
-                                        .toList(),
-                                  ),
+                            child: homeController.isErrorListTransaction.isTrue
+                                ? MessageError(
+                                    message: homeController
+                                        .errorListTransaction.value,
+                                    onTap: () {
+                                      homeController
+                                          .isErrorListTransaction(false);
+                                      homeController.getLastTransaction({
+                                        'walletId': homeController
+                                            .list[homeController.index.value]
+                                            .walletId
+                                      });
+                                    },
+                                  )
+                                : homeController.listtransaction.isEmpty
+                                    ? Center(
+                                        child: Padding(
+                                        padding: const EdgeInsets.all(8.0),
+                                        child: Text("No Transaction Found",
+                                            style: contentRegular),
+                                      ))
+                                    : Column(
+                                        children: homeController.listtransaction
+                                            .map<Widget>((e) => TransactionCard(
+                                                  transactionModel: e,
+                                                ))
+                                            .toList(),
+                                      ),
                           );
                         })
                       ],
