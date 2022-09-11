@@ -9,10 +9,11 @@ dependencies:
   flutter:
     sdk: flutter
 
+  badges: ^2.0.3
   card_swiper: ^2.0.3
   cupertino_icons: ^1.0.2
+  currency_text_input_formatter: ^2.1.7
   curved_navigation_bar: ^1.0.3
-  dio: ^4.0.6
   flutter_datetime_picker:
     git:
       url: https://github.com/Realank/flutter_datetime_picker.git
@@ -21,7 +22,9 @@ dependencies:
   get: ^4.5.1
   google_fonts: ^2.1.0
   http: ^0.13.4
+  image_picker: ^0.8.5+3
   intl: ^0.17.0
+  lottie: ^1.2.2
   shared_preferences: ^2.0.15
   shimmer: ^2.0.0
 
@@ -36,3 +39,4 @@ flutter:
   assets:
     - assets/png/
     - assets/svg/
+    - assets/lottie/
