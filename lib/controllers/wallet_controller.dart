@@ -1,22 +1,35 @@
+import 'dart:async';
 import 'dart:convert';
 
-import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:getx/models/wallet_model.dart';
 import 'package:getx/services/service_global.dart';
 import 'package:getx/themes/colors.dart';
 import 'package:getx/utils/constant.dart';
+import 'package:getx/utils/custom_dialog.dart';
 
 class WalletController extends GetxController {
+  ResultWalletForMemberModel resultWalletForMemberModel =
+      ResultWalletForMemberModel();
+  List<WalletForMemberModel> listForMember = [];
+  List<WalletForMemberModel> listForMemberAdd = [];
   var wallet = WalletModel();
   var walletName = TextEditingController().obs;
   var walletMoney = TextEditingController().obs;
+  var walletKeyword = TextEditingController().obs;
   var key = GlobalKey<FormState>().obs;
   var color = "red".obs;
+  var page = 1.obs;
   var index = 0.obs;
   var isLoading = false.obs;
-  var isUpdate = false.obs;
+  var isLoadingAddMember = false.obs;
+  var isLoadingSearch = false.obs;
+  var isErrorSearch = false.obs;
+  var errorSearch = "".obs;
+  var isSearch = false.obs;
+  Timer? debounce;
+
   List<WalletModel> walletListCard = [
     WalletModel(
       walletId: 0,
@@ -97,6 +110,17 @@ class WalletController extends GetxController {
     }
   }
 
+  void onSearchChanged({walletId}) {
+    if (debounce?.isActive ?? false) debounce!.cancel();
+    debounce = Timer(const Duration(seconds: 1), () {
+      isErrorSearch(false);
+      getMemberForWallet({
+        "wallet_id": walletId,
+        "keyword": walletKeyword.value.text,
+      });
+    });
+  }
+
   void handleAddWallet(Map data) async {
     if (key.value.currentState!.validate()) {
       key.value.currentState!.save();
@@ -110,7 +134,10 @@ class WalletController extends GetxController {
         } else {
           final response = jsonDecode(value.body);
           if (response['status']) {
-            Get.offNamed("/main_menu", arguments: {"isNew": false});
+            Get.offNamed(
+              "/main_menu",
+              arguments: {"isNew": false, "isReload": true},
+            );
           } else {
             snackbar(response["message"], false);
           }
@@ -119,5 +146,75 @@ class WalletController extends GetxController {
     }
   }
 
-  void handleUpdateWallet() {}
+  void handleAddMemberWallet(Map data) async {
+    isLoadingAddMember(true);
+    GlobalServices()
+        .post(addmemberwallet, data, header: await BaseHeader.getHeaderToken())
+        .then((value) {
+      isLoadingAddMember(false);
+      Get.back();
+      if (value is String) {
+        CustomDialog().succesOrFailedDialog(
+          status: false,
+          message: value,
+        );
+      } else {
+        final response = jsonDecode(value.body);
+        CustomDialog().succesOrFailedDialog(
+          status: response['status'],
+          message: response['message'],
+        );
+      }
+    });
+  }
+
+  void handleUpdateWallet(Map data) async {
+    if (key.value.currentState!.validate()) {
+      key.value.currentState!.save();
+      isLoading(true);
+      GlobalServices()
+          .put(updatewallet, data, header: await BaseHeader.getHeaderToken())
+          .then((value) {
+        isLoading(false);
+        if (value is String) {
+          snackbar(value, false);
+        } else {
+          final response = jsonDecode(value.body);
+          if (response['status']) {
+            Get.offNamed(
+              "/main_menu",
+              arguments: {"isNew": false, "isReload": true},
+            );
+          } else {
+            snackbar(response["message"], false);
+          }
+        }
+      });
+    }
+  }
+
+  void getMemberForWallet(Map data) async {
+    isLoadingSearch(true);
+    GlobalServices()
+        .get(
+            '${getmemberforwallet!}?wallet_id=${data["wallet_id"]}&keyword=${data["keyword"]}&page=$page',
+            header: await BaseHeader.getHeaderToken())
+        .then((value) {
+      isLoadingSearch(false);
+      if (value is String) {
+        isErrorSearch(true);
+        errorSearch(value);
+      } else {
+        final response = jsonDecode(value.body);
+        if (response['status']) {
+          resultWalletForMemberModel =
+              ResultWalletForMemberModel.fromJson(response);
+          listForMember = resultWalletForMemberModel.data!;
+        } else {
+          isErrorSearch(true);
+          errorSearch(response['message']);
+        }
+      }
+    });
+  }
 }

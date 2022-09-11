@@ -81,7 +81,10 @@ class AuthController extends GetxController {
       SharedPreferences sp = await SharedPreferences.getInstance();
       if (sp.getString('token') != null &&
           sp.getString("user_status") == "complete") {
-        Get.offNamed("/main_menu", arguments: {"isNew": false});
+        Get.offNamed(
+          "/main_menu",
+          arguments: {"isNew": false, "isReload": true},
+        );
       } else {
         Get.offNamed("/auth_login");
       }
@@ -130,7 +133,10 @@ class AuthController extends GetxController {
           final response = jsonDecode(value.body);
           if (response['status']) {
             setLocalStorage(response['data']);
-            Get.offNamed("/main_menu", arguments: {"isNew": false});
+            Get.offNamed(
+              "/main_menu",
+              arguments: {"isNew": false, "isReload": false},
+            );
           } else {
             snackbar(response["message"], false);
           }
@@ -186,7 +192,10 @@ class AuthController extends GetxController {
               Get.offAllNamed("/auth_login");
             } else {
               setLocalStorage(token, isStatus: true);
-              Get.offAllNamed("/main_menu", arguments: {"isNew": true});
+              Get.offNamed(
+                "/main_menu",
+                arguments: {"isNew": true, "isReload": false},
+              );
             }
           } else {
             snackbar(response["message"], false);

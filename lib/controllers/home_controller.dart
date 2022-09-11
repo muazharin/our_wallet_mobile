@@ -1,6 +1,5 @@
 import 'dart:convert';
 import 'package:get/get.dart';
-import 'package:getx/controllers/auth_controller.dart';
 import 'package:getx/models/transaction_model.dart';
 import 'package:getx/models/wallet_model.dart';
 import 'package:getx/services/service_global.dart';
@@ -64,7 +63,7 @@ class HomeController extends GetxController {
       isLoadingCard(false);
       if (value is String) {
         isErrorList(true);
-        errorList.value = value;
+        errorList(value);
         isLoadingMember(false);
         isLoadingTransaction(false);
       } else {
@@ -96,17 +95,25 @@ class HomeController extends GetxController {
         .then((value) {
       isLoadingMember(false);
       if (value is String) {
-        AuthController().snackbar(value, false);
+        isErrorListMember(true);
+        errorListMember.value = value;
+        isLoadingTransaction(false);
       } else {
         final response = jsonDecode(value.body);
         if (response['status']) {
           resultMemberWalletModel = ResultMemberWalletModel.fromJson(response);
           listmember = resultMemberWalletModel.data!;
-          getLastTransaction({
-            'walletId': list[index.value].walletId,
-          });
+          if (listmember.isNotEmpty) {
+            getLastTransaction({
+              'walletId': list[index.value].walletId,
+            });
+          } else {
+            isLoadingTransaction(false);
+          }
         } else {
-          AuthController().snackbar(response["message"], false);
+          isLoadingTransaction(false);
+          isErrorListMember(true);
+          errorListMember(response['message']);
         }
       }
     });
@@ -121,14 +128,16 @@ class HomeController extends GetxController {
         .then((value) {
       isLoadingTransaction(false);
       if (value is String) {
-        AuthController().snackbar(value, false);
+        isErrorListTransaction(true);
+        errorListTransaction(value);
       } else {
         final response = jsonDecode(value.body);
         if (response['status']) {
           resultTransactionModel = ResultTransactionModel.fromJson(response);
           listtransaction = resultTransactionModel.data!;
         } else {
-          AuthController().snackbar(response["message"], false);
+          isErrorListTransaction(true);
+          errorListTransaction(response['message']);
         }
       }
     });
