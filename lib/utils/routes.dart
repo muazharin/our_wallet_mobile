@@ -5,8 +5,10 @@ import 'package:getx/views/auth/auth_register.dart';
 import 'package:getx/views/auth/auth_register_form.dart';
 import 'package:getx/views/menu/main_menu.dart';
 import 'package:getx/views/splash_screen.dart';
+import 'package:getx/views/transaction/trans_create.dart';
 import 'package:getx/views/wallet/wallet_add.dart';
 import 'package:getx/views/wallet/wallet_detail.dart';
+import 'package:getx/views/wallet/wallet_member_add.dart';
 
 List<GetPage<dynamic>>? getPages = [
   GetPage(
@@ -42,10 +44,36 @@ List<GetPage<dynamic>>? getPages = [
   // Wallet
   GetPage(
     name: "/wallet_add",
-    page: () => const WalletAdd(),
+    page: () => const WalletAdd(
+      isUpdate: false,
+    ),
+  ),
+  GetPage(
+    name: "/wallet_update",
+    page: () => const WalletAdd(
+      isUpdate: true,
+    ),
   ),
   GetPage(
     name: "/wallet_detail",
     page: () => const WalletDetail(),
+  ),
+  GetPage(
+    name: "/wallet_member_add",
+    page: () => const WalletMemberAdd(),
+  ),
+
+  // Transaction
+  GetPage(
+    name: "/trans_topup",
+    page: () => const TransCreate(
+      type: "Kredit",
+    ),
+  ),
+  GetPage(
+    name: "/trans_shop",
+    page: () => const TransCreate(
+      type: "Debit",
+    ),
   ),
 ];
