@@ -7,12 +7,14 @@ class ButtonText extends StatelessWidget {
     this.onTap,
     this.icon,
     this.text = "",
+    this.textSize = 12,
     this.textColor = Colors.white,
   }) : super(key: key);
   final Function()? onTap;
   final Widget? icon;
   final String text;
   final Color textColor;
+  final double? textSize;
   @override
   Widget build(BuildContext context) {
     return Center(
@@ -27,6 +29,7 @@ class ButtonText extends StatelessWidget {
               text,
               style: smallSemiBold.copyWith(
                 color: textColor,
+                fontSize: textSize,
               ),
             )
           ],

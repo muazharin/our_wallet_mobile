@@ -1,12 +1,16 @@
 import 'package:flutter/material.dart';
-import 'package:getx/models/wallet_model.dart';
 import 'package:getx/themes/colors.dart';
 import 'package:getx/themes/fonts.dart';
 
 class MemberCard extends StatefulWidget {
-  const MemberCard({Key? key, required this.memberWalletModel})
-      : super(key: key);
-  final MemberWalletModel? memberWalletModel;
+  const MemberCard({
+    Key? key,
+    required this.userPhoto,
+    required this.userName,
+  }) : super(key: key);
+  // final MemberWalletModel? memberWalletModel;
+  final String? userPhoto;
+  final String? userName;
   @override
   _MemberCardState createState() => _MemberCardState();
 }
@@ -23,7 +27,7 @@ class _MemberCardState extends State<MemberCard> {
       padding: const EdgeInsets.symmetric(horizontal: 8),
       child: Column(
         children: [
-          widget.memberWalletModel!.userPhoto == ''
+          widget.userPhoto == ''
               ? ClipOval(
                   child: Container(
                     height: 48,
@@ -31,9 +35,7 @@ class _MemberCardState extends State<MemberCard> {
                     color: primaryBlood,
                     child: Center(
                       child: Text(
-                        widget.memberWalletModel!.userName!
-                            .substring(0, 1)
-                            .toUpperCase(),
+                        widget.userName![0].toUpperCase(),
                         style: contentSemiBold.copyWith(
                           color: Colors.white,
                         ),
@@ -43,7 +45,7 @@ class _MemberCardState extends State<MemberCard> {
                 )
               : ClipOval(
                   child: Image.network(
-                    widget.memberWalletModel!.userPhoto!,
+                    widget.userPhoto!,
                     height: 48,
                     width: 48,
                     fit: BoxFit.cover,

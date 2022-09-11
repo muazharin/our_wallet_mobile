@@ -1,8 +1,8 @@
+import 'package:currency_text_input_formatter/currency_text_input_formatter.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:getx/models/wallet_model.dart';
 import 'package:getx/themes/fonts.dart';
-import 'package:intl/intl.dart';
 
 class WalletCard extends StatefulWidget {
   const WalletCard(
@@ -15,7 +15,11 @@ class WalletCard extends StatefulWidget {
 }
 
 class _WalletCardState extends State<WalletCard> {
-  final currencyFormatter = NumberFormat("#,##0", "id_ID");
+  final currencyFormatter = CurrencyTextInputFormatter(
+    name: "",
+    locale: "ID",
+    decimalDigits: 0,
+  );
   WalletModel? walletModel;
   @override
   Widget build(BuildContext context) {
@@ -55,7 +59,7 @@ class _WalletCardState extends State<WalletCard> {
               widget.isCreate!
                   ? const SizedBox()
                   : Text(
-                      'Rp ${currencyFormatter.format(widget.walletModel!.walletMoney!)}',
+                      'Rp ${currencyFormatter.format("${widget.walletModel!.walletMoney!}")}',
                       style: titleSemiBold.copyWith(color: Colors.white),
                     ),
               const Spacer(),

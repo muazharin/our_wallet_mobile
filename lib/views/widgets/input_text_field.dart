@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:getx/themes/colors.dart';
 import 'package:getx/themes/fonts.dart';
 
@@ -15,17 +16,21 @@ class InputTextField extends StatefulWidget {
     this.onChanged,
     this.minLines = 1,
     this.maxLines = 1,
+    this.suffixIcon,
+    this.inputFormatters,
   }) : super(key: key);
   final bool enabled;
   final bool isPassword;
   final int minLines;
   final int maxLines;
   final String? hintText;
+  final Widget? suffixIcon;
   final Function()? onTap;
   final Function(String)? onChanged;
   final TextInputType? keyboardType;
   final TextEditingController? controller;
   final String? Function(String?)? validator;
+  final List<TextInputFormatter>? inputFormatters;
   @override
   State<InputTextField> createState() => _InputTextFieldState();
 }
@@ -51,6 +56,7 @@ class _InputTextFieldState extends State<InputTextField> {
       maxLines: widget.maxLines,
       onTap: widget.onTap ?? () {},
       onChanged: widget.onChanged ?? (v) => setState(() => {}),
+      inputFormatters: widget.inputFormatters,
       decoration: InputDecoration(
         suffixIcon: widget.isPassword
             ? InkWell(
@@ -66,14 +72,14 @@ class _InputTextFieldState extends State<InputTextField> {
                   color: primaryWater,
                 ),
               )
-            : const SizedBox.shrink(),
+            : widget.suffixIcon ?? const SizedBox.shrink(),
         errorMaxLines: 4,
         hintText: widget.hintText,
         hintStyle: contentRegular.copyWith(
           color: grayscaleCharcoalLightest,
         ),
         filled: true,
-        fillColor: Colors.white,
+        fillColor: widget.enabled ? Colors.white : grayscaleStone,
         contentPadding: const EdgeInsets.symmetric(
           vertical: 8,
           horizontal: 8,
@@ -83,6 +89,10 @@ class _InputTextFieldState extends State<InputTextField> {
           borderRadius: BorderRadius.circular(8),
         ),
         enabledBorder: OutlineInputBorder(
+          borderSide: const BorderSide(color: grayscaleStone),
+          borderRadius: BorderRadius.circular(8.0),
+        ),
+        disabledBorder: OutlineInputBorder(
           borderSide: const BorderSide(color: grayscaleStone),
           borderRadius: BorderRadius.circular(8.0),
         ),
