@@ -1,6 +1,6 @@
 import 'package:shared_preferences/shared_preferences.dart';
 
-String? baseurl = "http://192.168.251.228:8080/v1";
+String? baseurl = "http://192.168.48.228:8080/v1";
 
 // headers
 Map<String, String>? headers = {
@@ -64,3 +64,5 @@ String? createtransaction = "${baseurl!}/trans/create_trans";
 // category
 String? getcategory = "${baseurl!}/category/get_all_category";
 String? createcategory = "${baseurl!}/category/add_category";
+String? updatecategory = "${baseurl!}/category/update_category";
+String? deletecategory = "${baseurl!}/category/delete_category";

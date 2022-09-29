@@ -99,4 +99,54 @@ class TransController extends GetxController {
       });
     }
   }
+
+  void handleUpdateCategory(Map data) async {
+    if (keyAdd.value.currentState!.validate()) {
+      keyAdd.value.currentState!.save();
+      isLoadingAdd(true);
+      GlobalServices()
+          .put(updatecategory, data, header: await BaseHeader.getHeaderToken())
+          .then((value) {
+        isLoadingAdd(false);
+
+        if (value is String) {
+          CustomDialog().succesOrFailedDialog(
+            status: false,
+            message: value,
+          );
+        } else {
+          final response = jsonDecode(value.body);
+          CustomDialog().succesOrFailedDialog(
+            status: response['status'],
+            message: response['message'],
+          );
+        }
+      });
+    }
+  }
+
+  void handleDeleteCategory(Map data) async {
+    if (keyAdd.value.currentState!.validate()) {
+      keyAdd.value.currentState!.save();
+      isLoadingAdd(true);
+      GlobalServices()
+          .put("$deletecategory?category_id=${data['category_id']}", {},
+              header: await BaseHeader.getHeaderToken())
+          .then((value) {
+        isLoadingAdd(false);
+        if (value is String) {
+          CustomDialog().succesOrFailedDialog(
+            status: false,
+            message: value,
+          );
+        } else {
+          final response = jsonDecode(value.body);
+          CustomDialog().succesOrFailedDialog(
+            status: response['status'],
+            message: response['message'],
+          );
+        }
+      });
+    }
+  }
 }

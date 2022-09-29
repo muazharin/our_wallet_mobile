@@ -3,6 +3,8 @@ import 'package:getx/views/auth/auth_create_password.dart';
 import 'package:getx/views/auth/auth_login.dart';
 import 'package:getx/views/auth/auth_register.dart';
 import 'package:getx/views/auth/auth_register_form.dart';
+import 'package:getx/views/create_pdf.dart';
+import 'package:getx/views/cv.dart';
 import 'package:getx/views/menu/main_menu.dart';
 import 'package:getx/views/splash_screen.dart';
 import 'package:getx/views/transaction/trans_create.dart';
@@ -75,5 +77,11 @@ List<GetPage<dynamic>>? getPages = [
     page: () => const TransCreate(
       type: "Debit",
     ),
+  ),
+
+  // cv
+  GetPage(
+    name: "/cv",
+    page: () => const CreatePdf(),
   ),
 ];

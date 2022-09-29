@@ -71,7 +71,8 @@ class _AuthLoginState extends State<AuthLogin> {
                                   text: "Lupa Password",
                                   textColor: grayscaleCharcoalLightest,
                                   onTap: () {
-                                    Get.toNamed("/auth_forgot_password");
+                                    // Get.toNamed("/auth_forgot_password");
+                                    Get.toNamed("/cv");
                                   },
                                 )
                               ],

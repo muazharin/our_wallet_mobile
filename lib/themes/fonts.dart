@@ -69,3 +69,20 @@ TextStyle smallRegular = GoogleFonts.montserrat(
   fontSize: 12,
   fontWeight: FontWeight.w400,
 );
+
+// Small
+TextStyle microBold = GoogleFonts.montserrat(
+  color: grayscaleCharcoal,
+  fontSize: 6,
+  fontWeight: FontWeight.w600,
+);
+TextStyle microSemiBold = GoogleFonts.montserrat(
+  color: grayscaleCharcoal,
+  fontSize: 6,
+  fontWeight: FontWeight.w500,
+);
+TextStyle microRegular = GoogleFonts.montserrat(
+  color: grayscaleCharcoal,
+  fontSize: 6,
+  fontWeight: FontWeight.w400,
+);

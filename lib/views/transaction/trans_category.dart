@@ -21,6 +21,7 @@ class _TransCategoryState extends State<TransCategory> {
   List<String> list = [];
   bool? isResult = false;
   int? walletId = 0;
+  String? aksi = "";
 
   List<String> debit = [
     'Makanan',
@@ -58,6 +59,18 @@ class _TransCategoryState extends State<TransCategory> {
     });
   }
 
+  doUpdate() {
+    FocusScope.of(context).requestFocus(FocusNode());
+    transController.handleUpdateCategory({
+      "category_title": transController.transPilihan.value.text,
+      "category_id": "${Get.arguments['category_id']}",
+    });
+    setState(() {
+      isResult = true;
+      transController.transPilihan.value.text = "";
+    });
+  }
+
   @override
   void initState() {
     walletId = Get.arguments['wallet_id'];
@@ -66,6 +79,13 @@ class _TransCategoryState extends State<TransCategory> {
     } else {
       setState(() => list = debit);
     }
+
+    setState(() {
+      aksi = Get.arguments['aksi'] ?? "";
+      transController.categoryId.value = Get.arguments['category_id'] ?? 0;
+      transController.transPilihan.value.text =
+          Get.arguments['category_name'] ?? "";
+    });
     super.initState();
   }
 
@@ -89,8 +109,8 @@ class _TransCategoryState extends State<TransCategory> {
                   ),
                   Text(
                     widget.type == "Kredit"
-                        ? "Tambah Sumber Dana"
-                        : "Tambah Kategori",
+                        ? "${aksi!} Sumber Dana"
+                        : "${aksi!} Kategori",
                     style: subtitleSemiBold,
                   ),
                 ],
@@ -168,9 +188,13 @@ class _TransCategoryState extends State<TransCategory> {
                       text: "Simpan",
                       textColor: Colors.white,
                       onTap: () {
-                        doSave();
+                        if (aksi == "Tambah") {
+                          doSave();
+                        } else {
+                          doUpdate();
+                        }
                       },
-                    )
+                    ),
             ],
           ),
         ),

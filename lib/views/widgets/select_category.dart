@@ -38,7 +38,7 @@ class _SelectCategoryState extends State<SelectCategory> {
   }
 
   setInit() {
-    tempId(widget.tempId!);
+    tempId(widget.tempId);
     tempGropList(widget.tempGroupList!);
     data = {
       "type": widget.type,
@@ -84,7 +84,10 @@ class _SelectCategoryState extends State<SelectCategory> {
                               onTap: () => Get.to(
                                       TransCategory(type: widget.type),
                                       arguments: {
-                                    "wallet_id": widget.walletId
+                                    "wallet_id": widget.walletId,
+                                    "aksi": "Tambah",
+                                    "category_id": tempId.value,
+                                    "category_name": tempGropList.value,
                                   })!
                                   .then((v) {
                                 if (v) setInit();
@@ -155,17 +158,40 @@ class _SelectCategoryState extends State<SelectCategory> {
                             ),
                             const SizedBox(height: 16),
                             ButtonText(
-                              text: "Tambah Data",
+                              text: tempGropList.value == ""
+                                  ? "Tambah Data"
+                                  : "Ubah Data",
                               textColor: primaryBlood,
                               textSize: 14,
-                              onTap: () => Get.to(
-                                      TransCategory(type: widget.type),
-                                      arguments: {
-                                    "wallet_id": widget.walletId
-                                  })!
-                                  .then((v) {
-                                if (v) setInit();
-                              }),
+                              onTap: () {
+                                if (tempGropList.value == "") {
+                                  Get.to(
+                                    TransCategory(type: widget.type),
+                                    arguments: {
+                                      "wallet_id": widget.walletId,
+                                      "aksi": "Tambah",
+                                      "category_id": tempId.value,
+                                      "category_name": tempGropList.value,
+                                    },
+                                  )!
+                                      .then((v) {
+                                    if (v) setInit();
+                                  });
+                                } else {
+                                  Get.to(
+                                    TransCategory(type: widget.type),
+                                    arguments: {
+                                      "wallet_id": widget.walletId,
+                                      "aksi": "Update",
+                                      "category_id": tempId.value,
+                                      "category_name": tempGropList.value,
+                                    },
+                                  )!
+                                      .then((v) {
+                                    if (v) setInit();
+                                  });
+                                }
+                              },
                             )
                           ],
                         ),
