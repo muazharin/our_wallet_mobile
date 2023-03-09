@@ -5,8 +5,8 @@ import 'package:getx/themes/fonts.dart';
 class ButtonPrimary extends StatefulWidget {
   const ButtonPrimary({
     Key? key,
-    this.bgColor = primaryBlood,
-    this.hvColor = primaryBloodLight,
+    this.bgColor = primaryWater,
+    this.hvColor = primaryWaterLight,
     this.textColor = Colors.white,
     this.textSize = 14,
     this.radius = 12,

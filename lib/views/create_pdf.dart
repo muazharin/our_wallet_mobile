@@ -1,7 +1,12 @@
+import 'dart:async';
+import 'dart:typed_data';
+
 import 'package:flutter/material.dart';
 import 'package:getx/views/cv.dart';
 import 'package:getx/views/services.dart';
 import 'package:getx/views/widgets/button_primary.dart';
+import 'package:image_gallery_saver/image_gallery_saver.dart';
+import 'package:permission_handler/permission_handler.dart';
 import 'package:screenshot/screenshot.dart';
 
 class CreatePdf extends StatefulWidget {
@@ -31,10 +36,10 @@ class _CreatePdfState extends State<CreatePdf> {
         children: [
           const Expanded(child: CV()),
           Padding(
-            padding: const EdgeInsets.all(16),
+            padding: const EdgeInsets.all(0),
             child: ButtonPrimary(
               text: "Open Pdf",
-              onTap: () {
+              onTap: () async {
                 savePDF();
               },
             ),
@@ -43,4 +48,15 @@ class _CreatePdfState extends State<CreatePdf> {
       ),
     );
   }
+}
+
+FutureOr<dynamic> saveImage(Uint8List bytes) async {
+  await [Permission.storage].request();
+  // if(galeri.)
+
+  final time = DateTime.now();
+  final name = 'profile_card_$time';
+  final result = await ImageGallerySaver.saveImage(bytes, name: name);
+
+  return result['filePath'];
 }

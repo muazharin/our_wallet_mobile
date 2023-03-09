@@ -75,10 +75,10 @@ class _SelectCategoryState extends State<SelectCategory> {
                             const SizedBox(height: 8),
                             ButtonText(
                               text: "Tambah data",
-                              textColor: primaryBlood,
+                              textColor: primaryWater,
                               icon: const Icon(
                                 Icons.add,
-                                color: primaryBlood,
+                                color: primaryWater,
                                 size: 14,
                               ),
                               onTap: () => Get.to(
@@ -142,11 +142,11 @@ class _SelectCategoryState extends State<SelectCategory> {
                               text: "Pilih",
                               textColor: Colors.white,
                               bgColor: tempGropList.value == ""
-                                  ? primaryBloodLight
-                                  : primaryBlood,
+                                  ? primaryWaterLight
+                                  : primaryWater,
                               hvColor: tempGropList.value == ""
                                   ? Colors.white
-                                  : primaryBloodLight,
+                                  : primaryWaterLight,
                               onTap: () {
                                 setState(() {
                                   Get.back();
@@ -161,7 +161,7 @@ class _SelectCategoryState extends State<SelectCategory> {
                               text: tempGropList.value == ""
                                   ? "Tambah Data"
                                   : "Ubah Data",
-                              textColor: primaryBlood,
+                              textColor: primaryWater,
                               textSize: 14,
                               onTap: () {
                                 if (tempGropList.value == "") {

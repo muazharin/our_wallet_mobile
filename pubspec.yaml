@@ -22,12 +22,14 @@ dependencies:
   get: ^4.5.1
   google_fonts: ^2.1.0
   http: ^0.13.4
+  image_gallery_saver: ^1.7.1
   image_picker: ^0.8.5+3
   intl: ^0.17.0
   lottie: ^1.2.2
   open_file: ^3.2.1
   path_provider: ^2.0.9
   pdf: ^3.8.1
+  permission_handler: ^8.3.0
   screenshot: ^1.2.3
   shared_preferences: ^2.0.15
   shimmer: ^2.0.0

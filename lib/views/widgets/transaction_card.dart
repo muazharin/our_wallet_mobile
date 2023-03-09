@@ -6,7 +6,10 @@ import 'package:getx/views/widgets/profile_photo.dart';
 import 'package:intl/intl.dart';
 
 class TransactionCard extends StatefulWidget {
-  const TransactionCard({Key? key, this.transactionModel}) : super(key: key);
+  const TransactionCard({
+    Key? key,
+    this.transactionModel,
+  }) : super(key: key);
   final TransactionModel? transactionModel;
 
   @override
@@ -33,17 +36,37 @@ class _TransactionCardState extends State<TransactionCard> {
             // ));
           },
           child: ListTile(
-            leading: ProfilePhoto(
-              photo: widget.transactionModel!.transUser!.transUserPhoto,
-              name: widget.transactionModel!.transUser!.transUserName,
-              size: 48,
-            ),
-            title: Text(
-              widget.transactionModel!.transUser!.transUserName!,
-              style: smallRegular,
-            ),
+            contentPadding: const EdgeInsets.all(0),
+            leading: widget.transactionModel!.transUser == null
+                ? ClipRRect(
+                    borderRadius: const BorderRadius.only(
+                      topRight: Radius.circular(8),
+                      bottomRight: Radius.circular(8),
+                    ),
+                    child: Image.asset(
+                      "assets/png/cards_${widget.transactionModel!.transWallet!.transWalletColor!}.png",
+                      fit: BoxFit.cover,
+                      alignment: FractionalOffset.centerRight,
+                      width: 40,
+                      height: 125,
+                    ),
+                  )
+                : ProfilePhoto(
+                    photo: widget.transactionModel!.transUser!.transUserPhoto,
+                    name: widget.transactionModel!.transUser!.transUserName,
+                    size: 48,
+                  ),
+            title: widget.transactionModel!.transUser == null
+                ? Text(
+                    widget.transactionModel!.transWallet!.transWalletName!,
+                    style: smallRegular,
+                  )
+                : Text(
+                    widget.transactionModel!.transUser!.transUserName!,
+                    style: smallRegular,
+                  ),
             subtitle: Text(
-              DateFormat("dd MMM yy hh:mm")
+              DateFormat("dd MMM yy HH:mm")
                   .format(widget.transactionModel!.transDate!),
               style: smallRegular,
             ),

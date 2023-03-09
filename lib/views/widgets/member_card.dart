@@ -32,7 +32,7 @@ class _MemberCardState extends State<MemberCard> {
                   child: Container(
                     height: 48,
                     width: 48,
-                    color: primaryBlood,
+                    color: primaryWater,
                     child: Center(
                       child: Text(
                         widget.userName![0].toUpperCase(),

@@ -99,7 +99,7 @@ class _HomeState extends State<Home> {
                         leading: ClipRRect(
                           borderRadius: BorderRadius.circular(8),
                           child: Container(
-                            color: primaryBlood,
+                            color: primaryWater,
                             width: 36,
                             height: 36,
                             child: homeController.dataLocal['photo'] != ""
@@ -138,7 +138,7 @@ class _HomeState extends State<Home> {
                           },
                           child: const Icon(
                             Icons.notifications_none_outlined,
-                            color: primaryBlood,
+                            color: primaryWater,
                           ),
                         ),
                       ),
@@ -212,7 +212,7 @@ class _HomeState extends State<Home> {
                                       borderRadius: BorderRadius.circular(8.0),
                                       shape: BoxShape.rectangle,
                                       color: homeController.index.value == e.key
-                                          ? primaryBlood
+                                          ? primaryWater
                                           : grayscaleStone,
                                     ),
                                   ),
@@ -228,7 +228,7 @@ class _HomeState extends State<Home> {
                                 IconPad(
                                   icon: Image.asset(
                                     "assets/png/topup.png",
-                                    color: primaryBlood,
+                                    color: primaryWater,
                                   ),
                                   text: "Top Up",
                                   onTap: () => Get.toNamed(
@@ -243,7 +243,7 @@ class _HomeState extends State<Home> {
                                 IconPad(
                                   icon: Image.asset(
                                     "assets/png/payment.png",
-                                    color: primaryBlood,
+                                    color: primaryWater,
                                   ),
                                   text: "Payment",
                                   onTap: () => Get.toNamed(
@@ -258,7 +258,7 @@ class _HomeState extends State<Home> {
                                 IconPad(
                                   icon: Image.asset(
                                     "assets/png/barchart.png",
-                                    color: primaryBlood,
+                                    color: primaryWater,
                                   ),
                                   text: "Statistic",
                                   // onTap: () {},
@@ -266,7 +266,7 @@ class _HomeState extends State<Home> {
                                 IconPad(
                                   icon: Image.asset(
                                     "assets/png/invitation.png",
-                                    color: primaryBlood,
+                                    color: primaryWater,
                                   ),
                                   text: "Invitation",
                                   onTap: () {
@@ -363,7 +363,7 @@ class _HomeState extends State<Home> {
                                                 ),
                                                 child: const Icon(
                                                   Icons.arrow_forward_ios,
-                                                  color: primaryBlood,
+                                                  color: primaryWater,
                                                 ),
                                               )
                                             ],
@@ -383,7 +383,7 @@ class _HomeState extends State<Home> {
                                     style: smallSemiBold),
                                 ButtonText(
                                   text: "Selengkapnya",
-                                  textColor: primaryBlood,
+                                  textColor: primaryWater,
                                   onTap: () {},
                                 ),
                               ],

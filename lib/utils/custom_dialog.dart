@@ -51,13 +51,14 @@ class CustomDialog {
       cancel: ButtonPrimary(
         text: yes ?? "Ya",
         textColor: Colors.white,
-        bgColor: type == "info" ? primaryWater : primaryBlood,
+        // bgColor: type == "info" ? primaryWater : primaryBlood,
+        bgColor: primaryWater,
         onTap: onTapYes,
       ),
       confirm: ButtonPrimary(
         text: no ?? "Gak jadi",
-        textColor: type == "info" ? primaryWater : primaryBlood,
-        bgColor: type == "info" ? primaryWaterLight : primaryBloodLight,
+        textColor: primaryWater,
+        bgColor: primaryWaterLight,
         onTap: onTapNo,
       ),
     );

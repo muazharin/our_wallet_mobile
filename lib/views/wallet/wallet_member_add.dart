@@ -98,7 +98,7 @@ class _WalletMemberAddState extends State<WalletMemberAdd> {
                             onTap: () => Get.back(),
                             child: const Icon(
                               Icons.arrow_back_ios,
-                              color: primaryBlood,
+                              color: primaryWater,
                             ),
                           ),
                           Text(
@@ -120,7 +120,7 @@ class _WalletMemberAddState extends State<WalletMemberAdd> {
                         walletController.isSearch.isTrue
                             ? Icons.clear
                             : Icons.search_outlined,
-                        color: primaryBlood,
+                        color: primaryWater,
                       ),
                     )
                   ],
@@ -133,7 +133,7 @@ class _WalletMemberAddState extends State<WalletMemberAdd> {
                         controller: walletController.walletKeyword.value,
                         suffixIcon: const Icon(
                           Icons.search_outlined,
-                          color: primaryBlood,
+                          color: primaryWater,
                         ),
                         validator: validationString,
                         onChanged: (v) => setState(() {
@@ -145,7 +145,12 @@ class _WalletMemberAddState extends State<WalletMemberAdd> {
                 Expanded(
                   child: Obx(() {
                     if (walletController.isLoadingSearch.value) {
-                      return const ShimmerLoadingTransaction();
+                      return ListView(
+                        children: [1, 1, 1, 1, 1, 1, 1, 1, 1, 1]
+                            .map<Widget>(
+                                (_) => const ShimmerLoadingTransaction())
+                            .toList(),
+                      );
                     }
                     return walletController.isErrorSearch.value
                         ? Column(
@@ -211,8 +216,8 @@ class _WalletMemberAddState extends State<WalletMemberAdd> {
                     ? const SizedBox()
                     : ButtonPrimary(
                         text: "Selesai",
-                        bgColor: primaryBlood,
-                        hvColor: primaryBloodLight,
+                        bgColor: primaryWater,
+                        hvColor: primaryWaterLight,
                         onTap: () {
                           Get.offNamed(
                             "/main_menu",

@@ -102,7 +102,7 @@ class _AuthLoginState extends State<AuthLogin> {
                   ),
                   ButtonText(
                     text: "Daftar",
-                    textColor: primaryBlood,
+                    textColor: primaryWater,
                     onTap: () {
                       FocusScope.of(context).requestFocus(FocusNode());
                       Get.toNamed("/auth_register");

@@ -64,7 +64,7 @@ class _WalletDetailState extends State<WalletDetail> {
                         onTap: () => Get.back(),
                         child: const Icon(
                           Icons.arrow_back_ios,
-                          color: primaryBlood,
+                          color: primaryWater,
                         ),
                       ),
                       Text(
@@ -82,7 +82,7 @@ class _WalletDetailState extends State<WalletDetail> {
                     },
                     child: const Icon(
                       Icons.edit_outlined,
-                      color: primaryBlood,
+                      color: primaryWater,
                     ),
                   ),
                 ],
@@ -186,7 +186,7 @@ class _WalletDetailState extends State<WalletDetail> {
                                         color: walletController
                                                 .wallet.walletIsActive!
                                             ? variantCactus
-                                            : primaryBlood,
+                                            : primaryWater,
                                       ),
                                     ),
                                   ],
@@ -207,10 +207,10 @@ class _WalletDetailState extends State<WalletDetail> {
                         ),
                         ButtonText(
                           text: "Tambah Member",
-                          textColor: primaryBlood,
+                          textColor: primaryWater,
                           icon: const Icon(
                             Icons.add,
-                            color: primaryBlood,
+                            color: primaryWater,
                             size: 16,
                           ),
                           onTap: () {

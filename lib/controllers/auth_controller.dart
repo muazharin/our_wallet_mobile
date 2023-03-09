@@ -38,7 +38,7 @@ class AuthController extends GetxController {
         "Kesalahan",
         value,
         snackPosition: SnackPosition.BOTTOM,
-        backgroundColor: primaryBlood,
+        backgroundColor: primaryWater,
         colorText: Colors.white,
       );
     }

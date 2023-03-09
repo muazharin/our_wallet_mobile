@@ -20,7 +20,7 @@ class ProfilePhoto extends StatelessWidget {
               child: Container(
                 width: size ?? 56,
                 height: size ?? 56,
-                color: primaryBlood,
+                color: primaryWater,
                 child: Padding(
                   padding: const EdgeInsets.all(16.0),
                   child: Center(

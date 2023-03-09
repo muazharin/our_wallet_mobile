@@ -80,6 +80,7 @@ class _AuthRegisterFormState extends State<AuthRegisterForm> {
                             validator: validationPhoneNumber,
                             keyboardType: TextInputType.phone,
                             controller: authController.phoneNumber.value,
+                            enabled: false,
                             onTap: () {
                               FocusScope.of(context).requestFocus(FocusNode());
                             },

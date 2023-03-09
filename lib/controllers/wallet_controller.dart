@@ -10,8 +10,10 @@ import 'package:getx/utils/constant.dart';
 import 'package:getx/utils/custom_dialog.dart';
 
 class WalletController extends GetxController {
+  ResultWalletModel resultWalletModel = ResultWalletModel();
   ResultWalletForMemberModel resultWalletForMemberModel =
       ResultWalletForMemberModel();
+  List<WalletModel> list = [];
   List<WalletForMemberModel> listForMember = [];
   List<WalletForMemberModel> listForMemberAdd = [];
   var wallet = WalletModel();
@@ -23,9 +25,12 @@ class WalletController extends GetxController {
   var page = 1.obs;
   var index = 0.obs;
   var isLoading = false.obs;
+  var isLoadingList = false.obs;
   var isLoadingAddMember = false.obs;
   var isLoadingSearch = false.obs;
+  var isErrorList = false.obs;
   var isErrorSearch = false.obs;
+  var errorList = "".obs;
   var errorSearch = "".obs;
   var isSearch = false.obs;
   Timer? debounce;
@@ -89,7 +94,7 @@ class WalletController extends GetxController {
         "Kesalahan",
         value,
         snackPosition: SnackPosition.BOTTOM,
-        backgroundColor: primaryBlood,
+        backgroundColor: primaryWater,
         colorText: Colors.white,
       );
     }
@@ -215,6 +220,28 @@ class WalletController extends GetxController {
           errorSearch(response['message']);
         }
       }
+    });
+  }
+
+  void getOurWallet() async {
+    isLoading(true);
+    isErrorList(false);
+    GlobalServices()
+        .get2("$getourwallet?page=$page",
+            header: await BaseHeader.getHeaderToken())
+        .then((value) {
+      isLoading(false);
+      final response = jsonDecode(value.body);
+      if (response['status']) {
+        resultWalletModel = ResultWalletModel.fromJson(response);
+        list = resultWalletModel.data!;
+      } else {
+        isErrorList(true);
+      }
+    }).catchError((err) {
+      isLoading(false);
+      isErrorList(true);
+      errorList(err);
     });
   }
 }

@@ -54,6 +54,7 @@ class _InputTextFieldState extends State<InputTextField> {
       keyboardType: widget.keyboardType,
       minLines: widget.minLines,
       maxLines: widget.maxLines,
+      textInputAction: TextInputAction.done,
       onTap: widget.onTap ?? () {},
       onChanged: widget.onChanged ?? (v) => setState(() => {}),
       inputFormatters: widget.inputFormatters,

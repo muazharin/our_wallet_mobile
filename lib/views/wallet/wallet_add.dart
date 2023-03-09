@@ -76,6 +76,11 @@ class _WalletAddState extends State<WalletAdd> {
   }
 
   @override
+  void dispose() {
+    super.dispose();
+  }
+
+  @override
   Widget build(BuildContext context) {
     // Size s = MediaQuery.of(context).size;
     return Scaffold(
@@ -93,7 +98,7 @@ class _WalletAddState extends State<WalletAdd> {
                       onTap: () => Get.back(),
                       child: const Icon(
                         Icons.arrow_back_ios,
-                        color: primaryBlood,
+                        color: primaryWater,
                       ),
                     ),
                     Text(
@@ -183,10 +188,10 @@ class _WalletAddState extends State<WalletAdd> {
                         text: "Simpan",
                         textSize: 16,
                         bgColor: walletController.validation()
-                            ? primaryBlood
-                            : primaryBloodLight,
+                            ? primaryWater
+                            : primaryWaterLight,
                         hvColor: walletController.validation()
-                            ? primaryBloodLight
+                            ? primaryWaterLight
                             : Colors.white,
                         onTap: walletController.validation()
                             ? () {
@@ -204,7 +209,7 @@ class _WalletAddState extends State<WalletAdd> {
                       padding: const EdgeInsets.fromLTRB(16, 0, 16, 16),
                       child: ButtonText(
                         text: "Hapus Dompet",
-                        textColor: primaryBlood,
+                        textColor: primaryWater,
                         textSize: 16,
                         onTap: () {
                           Get.defaultDialog(
@@ -219,8 +224,8 @@ class _WalletAddState extends State<WalletAdd> {
                             ),
                             confirm: ButtonPrimary(
                               text: "Batal",
-                              textColor: primaryBlood,
-                              bgColor: primaryBloodLight,
+                              textColor: primaryWater,
+                              bgColor: primaryWaterLight,
                               onTap: () => Get.back(),
                             ),
                           );

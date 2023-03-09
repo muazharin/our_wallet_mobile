@@ -24,6 +24,27 @@ class ResultTransactionModel {
       };
 }
 
+class GroupHistory {
+  GroupHistory({
+    this.name,
+    this.riwayat,
+  });
+
+  String? name;
+  List<TransactionModel>? riwayat;
+
+  factory GroupHistory.fromJson(Map<String, dynamic> json) => GroupHistory(
+        name: json["nama"],
+        riwayat: List<TransactionModel>.from(
+            json["riwayat"].map((x) => TransactionModel.fromJson(x))),
+      );
+
+  Map<String, dynamic> toJson() => {
+        "nama": name,
+        "riwayat": List<dynamic>.from(riwayat!.map((x) => x.toJson())),
+      };
+}
+
 class TransactionModel {
   TransactionModel({
     this.transId,
@@ -34,6 +55,7 @@ class TransactionModel {
     this.transDate,
     this.transIsSeen,
     this.transUser,
+    this.transWallet,
   });
 
   int? transId;
@@ -44,6 +66,7 @@ class TransactionModel {
   DateTime? transDate;
   bool? transIsSeen;
   TransUser? transUser;
+  TransWallet? transWallet;
 
   factory TransactionModel.fromJson(Map<String, dynamic> json) =>
       TransactionModel(
@@ -54,7 +77,12 @@ class TransactionModel {
         transPrice: json["trans_price"],
         transDate: DateTime.parse(json["trans_date"]),
         transIsSeen: json["trans_is_seen"],
-        transUser: TransUser.fromJson(json["trans_user"]),
+        transUser: json["trans_user"] == null
+            ? null
+            : TransUser.fromJson(json["trans_user"]),
+        transWallet: json["trans_wallet"] == null
+            ? null
+            : TransWallet.fromJson(json["trans_wallet"]),
       );
 
   Map<String, dynamic> toJson() => {
@@ -65,7 +93,8 @@ class TransactionModel {
         "trans_price": transPrice,
         "trans_date": transDate!.toIso8601String(),
         "trans_is_seen": transIsSeen,
-        "trans_user": transUser!.toJson(),
+        "trans_user": transUser == null ? null : transUser!.toJson(),
+        "trans_wallet": transWallet == null ? null : transWallet!.toJson(),
       };
 }
 
@@ -98,5 +127,29 @@ class TransUser {
         "trans_user_email": transUserEmail,
         "trans_user_phone": transUserPhone,
         "trans_user_photo": transUserPhoto,
+      };
+}
+
+class TransWallet {
+  TransWallet({
+    this.transWalletId,
+    this.transWalletName,
+    this.transWalletColor,
+  });
+
+  int? transWalletId;
+  String? transWalletName;
+  String? transWalletColor;
+
+  factory TransWallet.fromJson(Map<String, dynamic> json) => TransWallet(
+        transWalletId: json["trans_wallet_id"],
+        transWalletName: json["trans_wallet_name"],
+        transWalletColor: json["trans_wallet_color"],
+      );
+
+  Map<String, dynamic> toJson() => {
+        "trans_wallet_id": transWalletId,
+        "trans_wallet_name": transWalletName,
+        "trans_wallet_color": transWalletColor,
       };
 }

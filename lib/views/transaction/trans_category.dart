@@ -104,7 +104,7 @@ class _TransCategoryState extends State<TransCategory> {
                     onTap: () => Get.back(result: isResult),
                     child: const Icon(
                       Icons.arrow_back_ios,
-                      color: primaryBlood,
+                      color: primaryWater,
                     ),
                   ),
                   Text(
@@ -156,7 +156,7 @@ class _TransCategoryState extends State<TransCategory> {
                                                 .transPilihan.value.text
                                                 .toLowerCase() ==
                                             e.value.toLowerCase()
-                                        ? primaryBlood
+                                        ? primaryWater
                                         : grayscaleStone),
                                 borderRadius: BorderRadius.circular(8),
                               ),
@@ -169,7 +169,7 @@ class _TransCategoryState extends State<TransCategory> {
                                                 .transPilihan.value.text
                                                 .toLowerCase() ==
                                             e.value.toLowerCase()
-                                        ? primaryBlood
+                                        ? primaryWater
                                         : grayscaleCharcoal,
                                   ),
                                 ),

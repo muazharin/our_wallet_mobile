@@ -1,6 +1,6 @@
 import 'package:shared_preferences/shared_preferences.dart';
 
-String? baseurl = "http://192.168.48.228:8080/v1";
+String? baseurl = "http://10.227.22.3:8080/v1";
 
 // headers
 Map<String, String>? headers = {
@@ -59,6 +59,7 @@ String? getmemberforwallet = "${baseurl!}/ow/get_for_member";
 
 // transaction
 String? gettransactionwallet = "${baseurl!}/trans/get_all_by_wallet_id";
+String? gettransactionuser = "${baseurl!}/trans/get_all_by_user_id";
 String? createtransaction = "${baseurl!}/trans/create_trans";
 
 // category

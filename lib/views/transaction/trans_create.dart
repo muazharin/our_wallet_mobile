@@ -85,7 +85,7 @@ class _TransCreateState extends State<TransCreate> {
                     onTap: () => Get.back(),
                     child: const Icon(
                       Icons.arrow_back_ios,
-                      color: primaryBlood,
+                      color: primaryWater,
                     ),
                   ),
                   Text(
@@ -108,7 +108,7 @@ class _TransCreateState extends State<TransCreate> {
                             : "Kategori",
                         suffixIcon: const Icon(
                           Icons.keyboard_arrow_down_outlined,
-                          color: primaryBlood,
+                          color: primaryWater,
                         ),
                         validator: validationString,
                         controller: transController.transCategory.value,

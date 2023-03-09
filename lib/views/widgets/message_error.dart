@@ -19,7 +19,7 @@ class MessageError extends StatelessWidget {
         Text(message ?? ""),
         ButtonText(
           text: "Coba lagi",
-          textColor: primaryBlood,
+          textColor: primaryWater,
           onTap: onTap ?? () {},
         )
       ],

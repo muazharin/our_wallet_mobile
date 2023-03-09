@@ -4,7 +4,7 @@ import 'package:getx/views/auth/auth_login.dart';
 import 'package:getx/views/auth/auth_register.dart';
 import 'package:getx/views/auth/auth_register_form.dart';
 import 'package:getx/views/create_pdf.dart';
-import 'package:getx/views/cv.dart';
+// import 'package:getx/views/cv.dart';
 import 'package:getx/views/menu/main_menu.dart';
 import 'package:getx/views/splash_screen.dart';
 import 'package:getx/views/transaction/trans_create.dart';

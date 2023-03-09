@@ -31,9 +31,9 @@ class _MainMenuState extends State<MainMenu> {
       ),
       bottomNavigationBar: CurvedNavigationBar(
         key: bottomNavigationKey,
-        color: primaryBlood,
+        color: primaryWater,
         backgroundColor: Colors.white,
-        buttonBackgroundColor: primaryBlood,
+        buttonBackgroundColor: primaryWater,
         animationDuration: const Duration(milliseconds: 200),
         height: 56,
         items: [

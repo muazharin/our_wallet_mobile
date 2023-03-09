@@ -84,10 +84,10 @@ class _SelectImageState extends State<SelectImage> {
                       ButtonText(
                         onTap: () => selectSource(),
                         text: "Tambah file",
-                        textColor: primaryBlood,
+                        textColor: primaryWater,
                         icon: const Icon(
                           Icons.add,
-                          color: primaryBlood,
+                          color: primaryWater,
                           size: 14,
                         ),
                       )
@@ -141,7 +141,7 @@ class _SelectImageState extends State<SelectImage> {
                                   },
                                   child: ClipOval(
                                     child: Container(
-                                      color: primaryBlood,
+                                      color: primaryWater,
                                       height: 16,
                                       width: 16,
                                       child: const Icon(

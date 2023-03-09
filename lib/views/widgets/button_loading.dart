@@ -10,7 +10,7 @@ class ButtonLoading extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Material(
-      color: bgColor ?? primaryBlood,
+      color: bgColor ?? primaryWater,
       borderRadius: BorderRadius.circular(12),
       child: InkWell(
         child: Container(

@@ -77,7 +77,7 @@ class _AuthRegisterState extends State<AuthRegister> {
                   ),
                   ButtonText(
                     text: "Masuk",
-                    textColor: primaryBlood,
+                    textColor: primaryWater,
                     onTap: () {
                       FocusScope.of(context).requestFocus(FocusNode());
                       Get.back();

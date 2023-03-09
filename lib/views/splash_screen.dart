@@ -35,7 +35,7 @@ class _SplashScreenState extends State<SplashScreen> {
               Text(
                 title,
                 style: titleSemiBold.copyWith(
-                  color: primaryBlood,
+                  color: primaryWater,
                 ),
               ),
             ],
